@@ -22,7 +22,7 @@ const navLinks = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cohortOpen, setCohortOpen] = useState(false)
-  const { user, isAdmin, isFellow, signOut, signInWithGoogle } = useAuth()
+  const { user, isAdmin, isFellow, loading: authLoading, signOut, signInWithGoogle } = useAuth()
   const navigate = useNavigate()
 
   const handleSignOut = async () => {
@@ -94,7 +94,9 @@ export default function Navbar() {
           </a>
 
           {/* Sign in / portal icon */}
-          {user ? (
+          {authLoading ? (
+            <div className="w-5 h-5 border-2 border-cc-blue-light border-t-transparent rounded-full animate-spin ml-1" />
+          ) : user ? (
             <div className="relative group ml-1">
               <button className="flex items-center gap-1.5 text-cc-blue-light hover:text-white transition-colors">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,6 +130,7 @@ export default function Navbar() {
               <span className="text-sm">Sign In</span>
             </button>
           )}
+
         </div>
 
         {/* Mobile hamburger */}
