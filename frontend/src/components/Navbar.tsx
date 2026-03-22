@@ -95,13 +95,21 @@ export default function Navbar() {
 
           {/* Sign in / portal icon */}
           {authLoading ? (
-            <div className="w-5 h-5 border-2 border-cc-blue-light border-t-transparent rounded-full animate-spin ml-1" />
+            <div className="w-8 h-8 rounded-full bg-cc-blue-navy animate-pulse ml-1" />
           ) : user ? (
             <div className="relative group ml-1">
-              <button className="flex items-center gap-1.5 text-cc-blue-light hover:text-white transition-colors">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
+              <button className="flex items-center gap-1.5">
+                {user.user_metadata?.avatar_url ? (
+                  <img
+                    src={user.user_metadata.avatar_url}
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full object-cover ring-2 ring-transparent group-hover:ring-cc-orange transition-all"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-cc-blue flex items-center justify-center text-white text-sm font-bold ring-2 ring-transparent group-hover:ring-cc-orange transition-all">
+                    {user.email?.charAt(0).toUpperCase()}
+                  </div>
+                )}
               </button>
               <div className="absolute right-0 top-full mt-2 bg-white text-gray-800 rounded-lg shadow-lg min-w-40 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                 <Link
