@@ -91,12 +91,14 @@ export default function CohortPage({ cohort }: { cohort: CohortContent }) {
       <section className="bg-cc-blue text-white py-14 px-4 text-center">
         <h2 className="text-2xl font-bold mb-4">Join the {title} Cohort</h2>
         <p className="text-cc-blue-light mb-8">Ready to serve? Apply today and we'll be in touch.</p>
-        <Link
-          to="/contact"
+        <a
+          href="https://forms.office.com/Pages/ResponsePage.aspx?id=2wING578lUSVNx03nMoq522akEAKp5lJh4gZBmFwCk1UOU9LWldKUkdaNDlTUkZTVkRCQkFRVlMwQS4u"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-block px-8 py-4 bg-cc-orange text-white font-bold text-lg rounded-lg hover:bg-cc-orange-medium transition-colors"
         >
           Apply Now
-        </Link>
+        </a>
       </section>
     </div>
   )

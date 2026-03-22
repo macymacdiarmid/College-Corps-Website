@@ -5,9 +5,13 @@ interface IconProps {
 export function FoodIcon({ className = 'w-12 h-12' }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2a5 5 0 0 0-5 5c0 1.8.9 3.3 2.3 4.2L8 21h8l-1.3-9.8A5 5 0 0 0 17 7a5 5 0 0 0-5-5z" />
-      <path d="M9 7h6" />
-      <path d="M10 10h4" />
+      {/* Bowl */}
+      <path d="M5 13c0 3.9 3.1 7 7 7s7-3.1 7-7H5z" />
+      <path d="M3 13h18" />
+      {/* Steam */}
+      <path d="M9 10 Q8 8 9 6 Q10 4 9 2" />
+      <path d="M12 9 Q11 7 12 5 Q13 3 12 1" />
+      <path d="M15 10 Q14 8 15 6 Q16 4 15 2" />
     </svg>
   )
 }
@@ -15,9 +19,14 @@ export function FoodIcon({ className = 'w-12 h-12' }: IconProps) {
 export function ClimateIcon({ className = 'w-12 h-12' }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 22V12" />
-      <path d="M12 12C12 12 7 10 7 5a5 5 0 0 1 10 0c0 5-5 7-5 7z" />
-      <path d="M12 16c-2.5 0-5 1-5 3h10c0-2-2.5-3-5-3z" />
+      {/* Stem */}
+      <path d="M12 22v-9" />
+      {/* Left leaf sprouting */}
+      <path d="M12 18 C11 16 8 15 6 16 C7 19 10 19 12 18z" />
+      {/* Right leaf sprouting */}
+      <path d="M12 13 C13 11 16 10 18 11 C17 14 14 14 12 13z" />
+      {/* Ground */}
+      <path d="M8 22h8" />
     </svg>
   )
 }

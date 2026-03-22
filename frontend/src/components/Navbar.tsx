@@ -70,12 +70,14 @@ export default function Navbar() {
               </NavLink>
             )
           )}
-          <Link
-            to="/contact"
+          <a
+            href="https://forms.office.com/Pages/ResponsePage.aspx?id=2wING578lUSVNx03nMoq522akEAKp5lJh4gZBmFwCk1UOU9LWldKUkdaNDlTUkZTVkRCQkFRVlMwQS4u"
+            target="_blank"
+            rel="noopener noreferrer"
             className="ml-4 px-4 py-2 bg-cc-orange text-white font-semibold rounded hover:bg-cc-orange-medium transition-colors"
           >
             Apply Now
-          </Link>
+          </a>
         </div>
 
         {/* Mobile hamburger */}
@@ -104,13 +106,15 @@ export default function Navbar() {
           <NavLink to="/cohorts/k12" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">K-12 Education</NavLink>
           <NavLink to="/updates" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Updates</NavLink>
           <NavLink to="/contact" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Contact</NavLink>
-          <Link
-            to="/contact"
+          <a
+            href="https://forms.office.com/Pages/ResponsePage.aspx?id=2wING578lUSVNx03nMoq522akEAKp5lJh4gZBmFwCk1UOU9LWldKUkdaNDlTUkZTVkRCQkFRVlMwQS4u"
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setMobileOpen(false)}
             className="mt-2 px-4 py-2 bg-cc-orange text-white font-semibold rounded text-center"
           >
             Apply Now
-          </Link>
+          </a>
         </div>
       )}
     </nav>

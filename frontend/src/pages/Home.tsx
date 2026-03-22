@@ -52,12 +52,14 @@ export default function Home() {
             College Corps is Cal Poly's AmeriCorps program, connecting students with meaningful service
             opportunities while earning an education award. Join a cohort, make an impact, and grow as a leader.
           </p>
-          <Link
-            to="/contact"
+          <a
+            href="https://forms.office.com/Pages/ResponsePage.aspx?id=2wING578lUSVNx03nMoq522akEAKp5lJh4gZBmFwCk1UOU9LWldKUkdaNDlTUkZTVkRCQkFRVlMwQS4u"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block px-8 py-4 bg-cc-orange text-white font-bold text-lg rounded-lg hover:bg-cc-orange-medium transition-colors shadow-lg"
           >
             Apply Now
-          </Link>
+          </a>
         </div>
       </section>
 
@@ -121,12 +123,14 @@ export default function Home() {
       <section className="py-16 px-4 text-center">
         <h2 className="text-3xl font-bold text-cc-blue mb-4">Ready to Make a Difference?</h2>
         <p className="text-gray-600 mb-8 text-lg">Applications open every spring for the following academic year.</p>
-        <Link
-          to="/contact"
+        <a
+          href="https://forms.office.com/Pages/ResponsePage.aspx?id=2wING578lUSVNx03nMoq522akEAKp5lJh4gZBmFwCk1UOU9LWldKUkdaNDlTUkZTVkRCQkFRVlMwQS4u"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-block px-8 py-4 bg-cc-blue text-white font-bold text-lg rounded-lg hover:bg-cc-blue-navy transition-colors"
         >
           Apply Now
-        </Link>
+        </a>
       </section>
     </div>
   )
