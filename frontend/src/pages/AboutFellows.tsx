@@ -49,7 +49,7 @@ export default function AboutFellows() {
           src="/media/hero/fellows-hero.jpg"
           alt="College Corps Fellows"
           className="w-full h-full object-cover"
-          style={{ objectPosition: 'center 33%' }}
+          style={{ objectPosition: 'center bottom' }}
         />
       </div>
 
