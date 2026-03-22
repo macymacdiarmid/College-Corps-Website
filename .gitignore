@@ -17,6 +17,9 @@ supabase/.temp
 # macOS
 .DS_Store
 
+# Stray nested repo folder
+College-Corps-Website/
+
 # Logs
 *.log
 npm-debug.log*
