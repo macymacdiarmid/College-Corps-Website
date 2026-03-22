@@ -12,7 +12,7 @@ export const homeContent = {
       'opportunities while earning an education award. Join a cohort, make an impact, and grow as a leader.',
     // Drop your hero image into frontend/public/media/hero/
     // and update the filename below
-    backgroundImage: 'hero/banner.jpg',
+    backgroundImage: 'hero/hero.jpg',
     // Optional: hero video (plays behind the text)
     backgroundVideo: '', // e.g. 'hero/banner.mp4'
   },

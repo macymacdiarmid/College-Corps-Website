@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { homeContent } from '../content/home'
+import { assetUrl } from '../lib/assets'
 
 const cohorts = [
   {
@@ -31,8 +33,16 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-cp-green text-white py-24 px-4 text-center">
-        <div className="max-w-3xl mx-auto">
+      <section className="relative bg-cp-green text-white py-24 px-4 text-center overflow-hidden">
+        {homeContent.hero.backgroundImage && (
+          <img
+            src={assetUrl(homeContent.hero.backgroundImage)}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover opacity-25"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+          />
+        )}
+        <div className="relative z-10 max-w-3xl mx-auto">
           <p className="text-cp-gold font-semibold tracking-widest uppercase text-sm mb-4">Cal Poly College Corps</p>
           <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
             Learn by Doing.<br />Serve Your Community.
