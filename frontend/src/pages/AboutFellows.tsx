@@ -20,7 +20,7 @@ export default function AboutFellows() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-cc-blue-dark text-white py-20 px-4 text-center">
+      <section className="bg-cc-blue-dark text-white py-10 px-4 text-center">
         <div className="max-w-3xl mx-auto">
           <p className="text-cc-orange font-semibold uppercase tracking-widest text-sm mb-3">College Corps</p>
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Become a Fellow</h1>
