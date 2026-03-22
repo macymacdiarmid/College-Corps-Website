@@ -84,14 +84,32 @@ export default function Navbar() {
             )
           )}
 
-          <a
-            href="https://forms.office.com/Pages/ResponsePage.aspx?id=2wING578lUSVNx03nMoq522akEAKp5lJh4gZBmFwCk1UOU9LWldKUkdaNDlTUkZTVkRCQkFRVlMwQS4u"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 px-4 py-2 bg-cc-orange text-white font-semibold rounded hover:bg-cc-orange-medium transition-colors"
-          >
-            Apply Now
-          </a>
+          <div className="relative group ml-2">
+            <button className="flex items-center gap-1 px-4 py-2 bg-cc-orange text-white font-semibold rounded hover:bg-cc-orange-medium transition-colors">
+              Apply Now
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className="absolute right-0 top-full mt-1 bg-white text-gray-800 rounded-lg shadow-lg min-w-48 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+              <a
+                href="https://forms.office.com/Pages/ResponsePage.aspx?id=2wING578lUSVNx03nMoq522akEAKp5lJh4gZBmFwCk1UOU9LWldKUkdaNDlTUkZTVkRCQkFRVlMwQS4u"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-3 text-sm hover:bg-gray-50 rounded-t-lg font-medium"
+              >
+                Apply to be a Fellow
+              </a>
+              <a
+                href="#chp-apply"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-3 text-sm hover:bg-gray-50 rounded-b-lg font-medium border-t border-gray-100"
+              >
+                Apply to be a CHP
+              </a>
+            </div>
+          </div>
 
           {/* Sign in / portal icon */}
           {authLoading ? (
@@ -176,7 +194,16 @@ export default function Navbar() {
             onClick={() => setMobileOpen(false)}
             className="mt-2 px-4 py-2 bg-cc-orange text-white font-semibold rounded text-center"
           >
-            Apply Now
+            Apply to be a Fellow
+          </a>
+          <a
+            href="#chp-apply"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setMobileOpen(false)}
+            className="px-4 py-2 bg-cc-blue text-white font-semibold rounded text-center"
+          >
+            Apply to be a CHP
           </a>
           {user ? (
             <>
