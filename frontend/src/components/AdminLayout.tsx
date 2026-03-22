@@ -6,6 +6,8 @@ const navItems = [
   { label: 'Applicants',   to: '/admin/applicants' },
   { label: 'Contacts',     to: '/admin/contacts' },
   { label: 'Newsletters',  to: '/admin/newsletters' },
+  { label: 'Content',      to: '/admin/content' },
+  { label: 'Media',        to: '/admin/media' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

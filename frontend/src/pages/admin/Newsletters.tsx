@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 
 interface Newsletter {
   id: string
   title: string
   content: string
+  pdf_url: string | null
   published_at: string | null
   created_at: string
 }
@@ -12,7 +13,7 @@ interface Newsletter {
 const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
-const emptyForm = { title: '', content: '' }
+const emptyForm = { title: '', content: '', pdf_url: '' }
 
 export default function Newsletters() {
   const [newsletters, setNewsletters] = useState<Newsletter[]>([])
@@ -21,6 +22,8 @@ export default function Newsletters() {
   const [editing, setEditing] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [showForm, setShowForm] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   async function load() {
     const { data } = await supabase
@@ -33,13 +36,27 @@ export default function Newsletters() {
 
   useEffect(() => { load() }, [])
 
+  async function handlePdfUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    const path = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
+    const { error } = await supabase.storage.from('newsletters').upload(path, file)
+    if (!error) {
+      const { data } = supabase.storage.from('newsletters').getPublicUrl(path)
+      setForm(f => ({ ...f, pdf_url: data.publicUrl }))
+    }
+    setUploading(false)
+  }
+
   async function handleSave() {
     if (!form.title.trim() || !form.content.trim()) return
     setSaving(true)
+    const payload = { title: form.title, content: form.content, pdf_url: form.pdf_url || null }
     if (editing) {
-      await supabase.from('newsletters').update({ title: form.title, content: form.content }).eq('id', editing)
+      await supabase.from('newsletters').update(payload).eq('id', editing)
     } else {
-      await supabase.from('newsletters').insert({ title: form.title, content: form.content })
+      await supabase.from('newsletters').insert(payload)
     }
     setForm(emptyForm)
     setEditing(null)
@@ -64,7 +81,7 @@ export default function Newsletters() {
 
   function startEdit(n: Newsletter) {
     setEditing(n.id)
-    setForm({ title: n.title, content: n.content })
+    setForm({ title: n.title, content: n.content, pdf_url: n.pdf_url ?? '' })
     setShowForm(true)
   }
 
@@ -109,10 +126,29 @@ export default function Newsletters() {
             <textarea
               value={form.content}
               onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
-              rows={8}
+              rows={6}
               className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cc-blue resize-y"
               placeholder="Newsletter content..."
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">PDF Attachment (optional)</label>
+            <div className="flex items-center gap-3 flex-wrap">
+              <label className={`px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors ${
+                uploading ? 'bg-gray-200 text-gray-400' : 'bg-cc-blue-light/20 text-cc-blue hover:bg-cc-blue-light/30'
+              }`}>
+                {uploading ? 'Uploading…' : 'Upload PDF'}
+                <input ref={fileRef} type="file" accept=".pdf" className="hidden" onChange={handlePdfUpload} disabled={uploading} />
+              </label>
+              {form.pdf_url && (
+                <div className="flex items-center gap-2">
+                  <a href={form.pdf_url} target="_blank" rel="noopener noreferrer" className="text-sm text-cc-orange hover:underline truncate max-w-xs">
+                    View uploaded PDF
+                  </a>
+                  <button onClick={() => setForm(f => ({ ...f, pdf_url: '' }))} className="text-gray-400 hover:text-red-500 text-xs">✕</button>
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex gap-3">
             <button
@@ -147,6 +183,11 @@ export default function Newsletters() {
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${n.published_at ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
                       {n.published_at ? `Published ${fmt(n.published_at)}` : 'Draft'}
                     </span>
+                    {n.pdf_url && (
+                      <a href={n.pdf_url} target="_blank" rel="noopener noreferrer" className="text-xs text-cc-orange hover:underline">
+                        PDF attached
+                      </a>
+                    )}
                   </div>
                   <p className="text-sm text-gray-400 mt-0.5 line-clamp-1">{n.content}</p>
                   <p className="text-xs text-gray-300 mt-1">Created {fmt(n.created_at)}</p>

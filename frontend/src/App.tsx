@@ -20,6 +20,8 @@ import Dashboard from './pages/admin/Dashboard'
 import Applicants from './pages/admin/Applicants'
 import Contacts from './pages/admin/Contacts'
 import Newsletters from './pages/admin/Newsletters'
+import Content from './pages/admin/Content'
+import Media from './pages/admin/Media'
 
 import PortalLogin from './pages/portal/Login'
 import MyApplication from './pages/portal/MyApplication'
@@ -75,6 +77,8 @@ export default function App() {
                     <Route path="/applicants"  element={<Applicants />} />
                     <Route path="/contacts"    element={<Contacts />} />
                     <Route path="/newsletters" element={<Newsletters />} />
+                    <Route path="/content"    element={<Content />} />
+                    <Route path="/media"      element={<Media />} />
                   </Routes>
                 </AdminLayout>
               </AdminGuard>
