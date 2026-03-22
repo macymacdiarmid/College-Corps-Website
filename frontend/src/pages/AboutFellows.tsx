@@ -43,16 +43,6 @@ export default function AboutFellows() {
         </div>
       </section>
 
-      {/* Full-width photo — bottom 3/4 of image */}
-      <div className="w-full overflow-hidden" style={{ height: '420px' }}>
-        <img
-          src="/media/hero/fellows-hero.jpg"
-          alt="College Corps Fellows"
-          className="w-full h-full object-cover"
-          style={{ objectPosition: 'center bottom' }}
-        />
-      </div>
-
       {/* What is a Fellow */}
       <section className="bg-gray-50 py-16 px-4">
         <div className="max-w-4xl mx-auto">
@@ -76,6 +66,16 @@ export default function AboutFellows() {
           </div>
         </div>
       </section>
+
+      {/* Full-width photo */}
+      <div className="w-full overflow-hidden" style={{ height: '420px' }}>
+        <img
+          src="/media/hero/fellows-hero.jpg"
+          alt="College Corps Fellows"
+          className="w-full h-full object-cover"
+          style={{ objectPosition: 'center bottom' }}
+        />
+      </div>
 
       {/* Quotes */}
       <section className="py-16 px-4">
