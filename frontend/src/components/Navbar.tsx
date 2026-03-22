@@ -34,7 +34,7 @@ export default function Navbar() {
   const portalLabel = isAdmin ? 'Admin Dashboard' : isFellow ? 'My Fellow Portal' : 'My Application'
 
   return (
-    <nav className="bg-cc-blue-dark text-white shadow-lg">
+    <nav className="bg-cc-blue-dark text-white shadow-lg sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo / Wordmark */}
         <Link to="/" className="flex items-center gap-2 font-bold text-lg tracking-wide">
