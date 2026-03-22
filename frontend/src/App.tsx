@@ -41,7 +41,7 @@ export default function App() {
             element={
               <div className="flex flex-col min-h-screen">
                 <Navbar />
-                <main className="flex-1">
+                <main className="flex-1 pt-[60px]">
                   <Routes>
                     <Route path="/"                    element={<Home />} />
                     <Route path="/cohorts/food"        element={<CohortFoodInsecurity />} />
