@@ -30,6 +30,16 @@ export default function AboutFellows() {
         </div>
       </section>
 
+      {/* Full-width photo */}
+      <div className="w-full overflow-hidden" style={{ height: '420px' }}>
+        <img
+          src="/media/hero/fellows-hero.jpg"
+          alt="College Corps Fellows"
+          className="w-full h-full object-cover"
+          style={{ objectPosition: 'center bottom' }}
+        />
+      </div>
+
       {/* Highlights */}
       <section className="max-w-5xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -66,16 +76,6 @@ export default function AboutFellows() {
           </div>
         </div>
       </section>
-
-      {/* Full-width photo */}
-      <div className="w-full overflow-hidden" style={{ height: '420px' }}>
-        <img
-          src="/media/hero/fellows-hero.jpg"
-          alt="College Corps Fellows"
-          className="w-full h-full object-cover"
-          style={{ objectPosition: 'center bottom' }}
-        />
-      </div>
 
       {/* Quotes */}
       <section className="py-16 px-4">
