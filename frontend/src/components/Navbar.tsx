@@ -14,7 +14,6 @@ const navLinks = [
       { label: 'K-12 Education',   to: '/cohorts/k12' },
     ],
   },
-  { label: 'Updates',     to: '/updates' },
   { label: 'FAQ',         to: '/faq' },
   { label: 'Contact',     to: '/contact' },
 ]
@@ -184,7 +183,6 @@ export default function Navbar() {
           <NavLink to="/cohorts/climate" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Climate Action</NavLink>
           <NavLink to="/cohorts/health" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Healthy Futures</NavLink>
           <NavLink to="/cohorts/k12" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">K-12 Education</NavLink>
-          <NavLink to="/updates" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Updates</NavLink>
           <NavLink to="/faq" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">FAQ</NavLink>
           <NavLink to="/contact" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Contact</NavLink>
           <a

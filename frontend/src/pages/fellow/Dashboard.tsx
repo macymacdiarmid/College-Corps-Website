@@ -22,6 +22,14 @@ interface HourLog {
   description: string | null
 }
 
+interface Newsletter {
+  id: string
+  title: string
+  content: string
+  pdf_url: string | null
+  published_at: string
+}
+
 interface Announcement {
   id: string
   title: string
@@ -63,6 +71,7 @@ export default function FellowDashboard() {
   const [profile, setProfile] = useState<FellowProfile | null>(null)
   const [logs, setLogs] = useState<HourLog[]>([])
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
+  const [newsletters, setNewsletters] = useState<Newsletter[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -70,14 +79,16 @@ export default function FellowDashboard() {
     if (!user) { navigate('/auth/callback', { replace: true }); return }
 
     async function load() {
-      const [profileRes, logsRes, announcementsRes] = await Promise.all([
+      const [profileRes, logsRes, announcementsRes, newslettersRes] = await Promise.all([
         supabase.from('fellow_users').select('*').eq('email', user!.email).single(),
         supabase.from('hour_logs').select('*').eq('fellow_email', user!.email).order('log_date', { ascending: false }),
         supabase.from('announcements').select('*').lte('published_at', new Date().toISOString()).order('published_at', { ascending: false }).limit(10),
+        supabase.from('newsletters').select('*').not('published_at', 'is', null).order('published_at', { ascending: false }),
       ])
       setProfile(profileRes.data)
       setLogs(logsRes.data ?? [])
       setAnnouncements(announcementsRes.data ?? [])
+      setNewsletters(newslettersRes.data ?? [])
       setLoading(false)
     }
     load()
@@ -279,6 +290,38 @@ export default function FellowDashboard() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Newsletters */}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="font-bold text-cc-blue">Newsletters</h2>
+          </div>
+          {newsletters.length === 0 ? (
+            <p className="text-gray-400 text-sm p-6">No newsletters published yet.</p>
+          ) : (
+            <div className="divide-y divide-gray-100">
+              {newsletters.map(n => (
+                <div key={n.id} className="px-6 py-4 flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="font-medium text-gray-800">{n.title}</p>
+                    <p className="text-sm text-gray-500 mt-0.5 line-clamp-2">{n.content}</p>
+                    <p className="text-xs text-gray-400 mt-1">{fmt(n.published_at)}</p>
+                  </div>
+                  {n.pdf_url && (
+                    <a
+                      href={n.pdf_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-shrink-0 text-xs px-3 py-1.5 bg-cc-orange text-white rounded-lg hover:bg-cc-orange-dark transition-colors font-medium"
+                    >
+                      View PDF
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
       </main>
