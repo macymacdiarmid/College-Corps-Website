@@ -30,12 +30,13 @@ const fmt = (iso: string) =>
   new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 
 export default function MyApplication() {
-  const { user, signOut } = useAuth()
+  const { user, loading: authLoading, signOut } = useAuth()
   const navigate = useNavigate()
   const [app, setApp] = useState<Application | null | 'none'>('none')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (authLoading) return
     if (!user) { navigate('/portal/login', { replace: true }); return }
     supabase
       .from('applications')
@@ -47,7 +48,7 @@ export default function MyApplication() {
         setApp(data && data.length > 0 ? data[0] : null)
         setLoading(false)
       })
-  }, [user, navigate])
+  }, [user, authLoading, navigate])
 
   const handleSignOut = async () => {
     await signOut()
@@ -74,7 +75,7 @@ export default function MyApplication() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-12">
-        {loading ? (
+        {(authLoading || loading) ? (
           <div className="text-center text-gray-400">Loading…</div>
         ) : app === null ? (
           <div className="bg-white rounded-2xl shadow-sm p-10 text-center">
