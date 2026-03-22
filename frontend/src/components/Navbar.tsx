@@ -21,11 +21,11 @@ export default function Navbar() {
   const [cohortOpen, setCohortOpen] = useState(false)
 
   return (
-    <nav className="bg-cp-green text-white shadow-lg">
+    <nav className="bg-cc-blue-dark text-white shadow-lg">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo / Wordmark */}
         <Link to="/" className="flex items-center gap-2 font-bold text-lg tracking-wide">
-          <span className="text-cp-gold">Cal Poly</span>
+          <span className="text-cc-orange">Cal Poly</span>
           <span>College Corps</span>
         </Link>
 
@@ -36,7 +36,7 @@ export default function Navbar() {
               <div key={link.label} className="relative">
                 <button
                   onClick={() => setCohortOpen((o) => !o)}
-                  className="hover:text-cp-gold transition-colors flex items-center gap-1"
+                  className="hover:text-cc-orange transition-colors flex items-center gap-1"
                 >
                   {link.label}
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,7 +63,7 @@ export default function Navbar() {
                 key={link.to}
                 to={link.to!}
                 className={({ isActive }) =>
-                  isActive ? 'text-cp-gold' : 'hover:text-cp-gold transition-colors'
+                  isActive ? 'text-cc-orange' : 'hover:text-cc-orange transition-colors'
                 }
               >
                 {link.label}
@@ -72,7 +72,7 @@ export default function Navbar() {
           )}
           <Link
             to="/contact"
-            className="ml-4 px-4 py-2 bg-cp-gold text-cp-green font-semibold rounded hover:bg-yellow-400 transition-colors"
+            className="ml-4 px-4 py-2 bg-cc-orange text-white font-semibold rounded hover:bg-cc-orange-medium transition-colors"
           >
             Apply Now
           </Link>
@@ -96,18 +96,18 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-cp-green-light px-4 pb-4 flex flex-col gap-3 text-sm font-medium">
-          <NavLink to="/" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cp-gold">Home</NavLink>
-          <NavLink to="/cohorts/food" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cp-gold">Food Insecurity</NavLink>
-          <NavLink to="/cohorts/climate" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cp-gold">Climate Action</NavLink>
-          <NavLink to="/cohorts/health" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cp-gold">Healthy Futures</NavLink>
-          <NavLink to="/cohorts/k12" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cp-gold">K-12 Education</NavLink>
-          <NavLink to="/updates" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cp-gold">Updates</NavLink>
-          <NavLink to="/contact" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cp-gold">Contact</NavLink>
+        <div className="md:hidden bg-cc-blue-navy px-4 pb-4 flex flex-col gap-3 text-sm font-medium">
+          <NavLink to="/" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Home</NavLink>
+          <NavLink to="/cohorts/food" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Food Insecurity</NavLink>
+          <NavLink to="/cohorts/climate" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Climate Action</NavLink>
+          <NavLink to="/cohorts/health" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Healthy Futures</NavLink>
+          <NavLink to="/cohorts/k12" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">K-12 Education</NavLink>
+          <NavLink to="/updates" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Updates</NavLink>
+          <NavLink to="/contact" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Contact</NavLink>
           <Link
             to="/contact"
             onClick={() => setMobileOpen(false)}
-            className="mt-2 px-4 py-2 bg-cp-gold text-cp-green font-semibold rounded text-center"
+            className="mt-2 px-4 py-2 bg-cc-orange text-white font-semibold rounded text-center"
           >
             Apply Now
           </Link>

@@ -9,11 +9,8 @@ interface ChatMessage {
 const now = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
 export default function Contact() {
-  // Contact form state
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
-
-  // Chat state
   const [chat, setChat] = useState<ChatMessage[]>([
     { sender: 'admin', text: 'Hi there! Welcome to College Corps. How can we help you today?', time: now() },
   ])
@@ -46,15 +43,10 @@ export default function Contact() {
     if (!text) return
     setChat((prev) => [...prev, { sender: 'user', text, time: now() }])
     setChatInput('')
-    // Auto-reply placeholder — will be replaced with real backend in Phase 3
     setTimeout(() => {
       setChat((prev) => [
         ...prev,
-        {
-          sender: 'admin',
-          text: "Thanks for your message! A member of our team will get back to you within 1–2 business days.",
-          time: now(),
-        },
+        { sender: 'admin', text: "Thanks for your message! A member of our team will get back to you within 1–2 business days.", time: now() },
       ])
     }, 800)
   }
@@ -68,7 +60,7 @@ export default function Contact() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-14">
-      <h1 className="text-4xl font-bold text-cp-green mb-2 text-center">Contact &amp; Questions</h1>
+      <h1 className="text-4xl font-bold text-cc-blue mb-2 text-center">Contact &amp; Questions</h1>
       <p className="text-gray-500 text-center mb-12">
         Have a question about College Corps? Fill out the form or chat with us below.
       </p>
@@ -76,9 +68,9 @@ export default function Contact() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Contact Form */}
         <div>
-          <h2 className="text-2xl font-semibold text-cp-green mb-6">Send Us a Message</h2>
+          <h2 className="text-2xl font-semibold text-cc-blue mb-6">Send Us a Message</h2>
           {formStatus === 'sent' ? (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-green-700">
+            <div className="bg-blue-50 border border-cc-blue-light rounded-lg p-6 text-cc-blue">
               <p className="font-semibold text-lg">Message sent!</p>
               <p className="mt-1">We'll get back to you within 1–2 business days.</p>
             </div>
@@ -91,7 +83,7 @@ export default function Contact() {
                   required
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cp-green"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cc-blue"
                   placeholder="Your full name"
                 />
               </div>
@@ -102,7 +94,7 @@ export default function Contact() {
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cp-green"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cc-blue"
                   placeholder="you@calpoly.edu"
                 />
               </div>
@@ -113,7 +105,7 @@ export default function Contact() {
                   rows={5}
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cp-green resize-none"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cc-blue resize-none"
                   placeholder="Tell us what's on your mind…"
                 />
               </div>
@@ -123,7 +115,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={formStatus === 'sending'}
-                className="w-full py-3 bg-cp-green text-white font-semibold rounded-lg hover:bg-cp-green-light transition-colors disabled:opacity-60"
+                className="w-full py-3 bg-cc-blue text-white font-semibold rounded-lg hover:bg-cc-blue-navy transition-colors disabled:opacity-60"
               >
                 {formStatus === 'sending' ? 'Sending…' : 'Send Message'}
               </button>
@@ -133,24 +125,18 @@ export default function Contact() {
 
         {/* Chat Box */}
         <div>
-          <h2 className="text-2xl font-semibold text-cp-green mb-6">Live Chat</h2>
+          <h2 className="text-2xl font-semibold text-cc-blue mb-6">Live Chat</h2>
           <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col h-96">
-            {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
               {chat.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-xs px-4 py-2 rounded-2xl text-sm ${
-                      msg.sender === 'user'
-                        ? 'bg-cp-green text-white rounded-br-none'
-                        : 'bg-white border border-gray-200 text-gray-800 rounded-bl-none'
-                    }`}
-                  >
+                <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-xs px-4 py-2 rounded-2xl text-sm ${
+                    msg.sender === 'user'
+                      ? 'bg-cc-blue text-white rounded-br-none'
+                      : 'bg-white border border-gray-200 text-gray-800 rounded-bl-none'
+                  }`}>
                     <p>{msg.text}</p>
-                    <p className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-green-200' : 'text-gray-400'}`}>
+                    <p className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-cc-blue-light' : 'text-gray-400'}`}>
                       {msg.time}
                     </p>
                   </div>
@@ -158,20 +144,18 @@ export default function Contact() {
               ))}
               <div ref={chatEndRef} />
             </div>
-
-            {/* Input */}
             <div className="border-t border-gray-200 p-3 bg-white flex gap-2">
               <input
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 onKeyDown={handleChatKey}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cp-green"
+                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cc-blue"
                 placeholder="Type a message… (Enter to send)"
               />
               <button
                 onClick={sendChatMessage}
-                className="px-4 py-2 bg-cp-green text-white rounded-lg text-sm font-medium hover:bg-cp-green-light transition-colors"
+                className="px-4 py-2 bg-cc-blue text-white rounded-lg text-sm font-medium hover:bg-cc-blue-navy transition-colors"
               >
                 Send
               </button>

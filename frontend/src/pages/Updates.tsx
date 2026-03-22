@@ -8,7 +8,6 @@ interface Newsletter {
   pdf_url?: string
 }
 
-// Placeholder newsletters shown before backend is connected
 const PLACEHOLDER_NEWSLETTERS: Newsletter[] = [
   {
     id: '1',
@@ -41,22 +40,19 @@ export default function Updates() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    // Attempt to fetch from backend; fall back to placeholders if unavailable
     setLoading(true)
     fetch('/api/newsletters')
       .then((r) => r.json())
       .then((data: Newsletter[]) => {
         if (Array.isArray(data) && data.length > 0) setNewsletters(data)
       })
-      .catch(() => {
-        // Backend not yet connected — placeholder data stays
-      })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-14">
-      <h1 className="text-4xl font-bold text-cp-green mb-2 text-center">Updates &amp; Newsletters</h1>
+      <h1 className="text-4xl font-bold text-cc-blue mb-2 text-center">Updates &amp; Newsletters</h1>
       <p className="text-gray-500 text-center mb-12">
         Stay up to date with everything happening in College Corps.
       </p>
@@ -65,10 +61,10 @@ export default function Updates() {
 
       <div className="space-y-8">
         {newsletters.map((n) => (
-          <article key={n.id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+          <article key={n.id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm border-l-4 border-l-cc-orange">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
-                <h2 className="text-xl font-bold text-cp-green">{n.title}</h2>
+                <h2 className="text-xl font-bold text-cc-blue">{n.title}</h2>
                 <p className="text-sm text-gray-400 mt-1">{formatDate(n.published_at)}</p>
               </div>
               {n.pdf_url && (
@@ -76,7 +72,7 @@ export default function Updates() {
                   href={n.pdf_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-shrink-0 px-4 py-2 border border-cp-green text-cp-green text-sm font-medium rounded-lg hover:bg-cp-green hover:text-white transition-colors"
+                  className="flex-shrink-0 px-4 py-2 border border-cc-blue text-cc-blue text-sm font-medium rounded-lg hover:bg-cc-blue hover:text-white transition-colors"
                 >
                   Download PDF
                 </a>
@@ -87,9 +83,9 @@ export default function Updates() {
         ))}
       </div>
 
-      <div className="mt-12 bg-cp-green text-white rounded-xl p-8 text-center">
+      <div className="mt-12 bg-cc-blue text-white rounded-xl p-8 text-center">
         <h2 className="text-xl font-bold mb-2">Get Updates in Your Inbox</h2>
-        <p className="text-gray-200 mb-6">Subscribe to receive newsletters directly to your email.</p>
+        <p className="text-cc-blue-light mb-6">Subscribe to receive newsletters directly to your email.</p>
         <form
           onSubmit={(e) => e.preventDefault()}
           className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
@@ -97,11 +93,11 @@ export default function Updates() {
           <input
             type="email"
             placeholder="your@email.com"
-            className="flex-1 px-4 py-2.5 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-cp-gold"
+            className="flex-1 px-4 py-2.5 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-cc-orange"
           />
           <button
             type="submit"
-            className="px-6 py-2.5 bg-cp-gold text-cp-green font-semibold rounded-lg hover:bg-yellow-400 transition-colors"
+            className="px-6 py-2.5 bg-cc-orange text-white font-semibold rounded-lg hover:bg-cc-orange-medium transition-colors"
           >
             Subscribe
           </button>
