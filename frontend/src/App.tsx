@@ -23,6 +23,7 @@ import Newsletters from './pages/admin/Newsletters'
 
 import PortalLogin from './pages/portal/Login'
 import MyApplication from './pages/portal/MyApplication'
+import AuthCallback from './pages/AuthCallback'
 
 export default function App() {
   return (
@@ -52,6 +53,9 @@ export default function App() {
               </div>
             }
           />
+
+          {/* Auth callback — smart redirect based on email */}
+          <Route path="/auth/callback" element={<AuthCallback />} />
 
           {/* Applicant portal */}
           <Route path="/portal/login" element={<PortalLogin />} />

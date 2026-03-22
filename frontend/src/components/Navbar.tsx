@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const navLinks = [
   { label: 'Home',        to: '/' },
@@ -21,6 +22,15 @@ const navLinks = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cohortOpen, setCohortOpen] = useState(false)
+  const { user, isAdmin, signOut, signInWithGoogle } = useAuth()
+  const navigate = useNavigate()
+
+  const handleSignOut = async () => {
+    await signOut()
+    navigate('/')
+  }
+
+  const portalLink = isAdmin ? '/admin' : '/portal'
 
   return (
     <nav className="bg-cc-blue-dark text-white shadow-lg">
@@ -72,14 +82,51 @@ export default function Navbar() {
               </NavLink>
             )
           )}
+
           <a
             href="https://forms.office.com/Pages/ResponsePage.aspx?id=2wING578lUSVNx03nMoq522akEAKp5lJh4gZBmFwCk1UOU9LWldKUkdaNDlTUkZTVkRCQkFRVlMwQS4u"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-4 px-4 py-2 bg-cc-orange text-white font-semibold rounded hover:bg-cc-orange-medium transition-colors"
+            className="ml-2 px-4 py-2 bg-cc-orange text-white font-semibold rounded hover:bg-cc-orange-medium transition-colors"
           >
             Apply Now
           </a>
+
+          {/* Sign in / portal icon */}
+          {user ? (
+            <div className="relative group ml-1">
+              <button className="flex items-center gap-1.5 text-cc-blue-light hover:text-white transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </button>
+              <div className="absolute right-0 top-full mt-2 bg-white text-gray-800 rounded-lg shadow-lg min-w-40 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                <Link
+                  to={portalLink}
+                  className="block px-4 py-2.5 text-sm hover:bg-gray-50 rounded-t-lg font-medium"
+                >
+                  {isAdmin ? 'Admin Dashboard' : 'My Application'}
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-gray-50 rounded-b-lg"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => signInWithGoogle()}
+              className="ml-1 flex items-center gap-1.5 text-cc-blue-light hover:text-white transition-colors"
+              title="Sign in"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span className="text-sm">Sign In</span>
+            </button>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -119,6 +166,30 @@ export default function Navbar() {
           >
             Apply Now
           </a>
+          {user ? (
+            <>
+              <Link
+                to={portalLink}
+                onClick={() => setMobileOpen(false)}
+                className="py-1 hover:text-cc-orange"
+              >
+                {isAdmin ? 'Admin Dashboard' : 'My Application'}
+              </Link>
+              <button
+                onClick={() => { setMobileOpen(false); handleSignOut() }}
+                className="text-left py-1 text-red-400 hover:text-red-300"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => { setMobileOpen(false); signInWithGoogle() }}
+              className="text-left py-1 text-cc-orange font-semibold"
+            >
+              Sign In
+            </button>
+          )}
         </div>
       )}
     </nav>

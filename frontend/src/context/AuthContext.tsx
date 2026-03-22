@@ -11,7 +11,7 @@ interface AuthContextType {
   user: User | null
   isAdmin: boolean
   loading: boolean
-  signInWithGoogle: (redirectTo?: string) => Promise<void>
+  signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -32,11 +32,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  const signInWithGoogle = async (redirectTo = '/admin') => {
+  const signInWithGoogle = async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}${redirectTo}`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     })
   }
