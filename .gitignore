@@ -1,36 +1,27 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies
+node_modules/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+# Build output
+frontend/dist/
+backend/dist/
 
-# testing
-/coverage
+# Environment variables — NEVER commit these
+.env
+.env.local
+.env.production
 
-# next.js
-/.next/
-/out/
+# Supabase local data
+supabase/.branches
+supabase/.temp
 
-# production
-/build
-
-# misc
+# macOS
 .DS_Store
-*.pem
 
-# debug
+# Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
-.env
-
-# vercel
-.vercel
-
-# typescript
+# TypeScript
 *.tsbuildinfo
-next-env.d.ts
