@@ -9,6 +9,7 @@ import CohortK12Education from './pages/CohortK12Education'
 import Contact from './pages/Contact'
 import Updates from './pages/Updates'
 import FAQ from './pages/FAQ'
+import About from './pages/About'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/contact"             element={<Contact />} />
             <Route path="/updates"             element={<Updates />} />
             <Route path="/faq"                 element={<FAQ />} />
+            <Route path="/about"               element={<About />} />
           </Routes>
         </main>
         <Footer />

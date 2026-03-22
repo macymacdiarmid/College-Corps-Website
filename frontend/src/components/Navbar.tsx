@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 
 const navLinks = [
   { label: 'Home',        to: '/' },
+  { label: 'About',       to: '/about' },
   {
     label: 'Cohorts',
     children: [
@@ -101,6 +102,7 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden bg-cc-blue-navy px-4 pb-4 flex flex-col gap-3 text-sm font-medium">
           <NavLink to="/" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Home</NavLink>
+          <NavLink to="/about" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">About</NavLink>
           <NavLink to="/cohorts/food" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Food Insecurity</NavLink>
           <NavLink to="/cohorts/climate" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Climate Action</NavLink>
           <NavLink to="/cohorts/health" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Healthy Futures</NavLink>
