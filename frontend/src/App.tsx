@@ -14,6 +14,8 @@ import Contact from './pages/Contact'
 import Updates from './pages/Updates'
 import FAQ from './pages/FAQ'
 import About from './pages/About'
+import AboutFellows from './pages/AboutFellows'
+import AboutCHPs from './pages/AboutCHPs'
 
 import AdminLogin from './pages/admin/Login'
 import Dashboard from './pages/admin/Dashboard'
@@ -52,6 +54,8 @@ export default function App() {
                     <Route path="/updates"             element={<Updates />} />
                     <Route path="/faq"                 element={<FAQ />} />
                     <Route path="/about"               element={<About />} />
+                    <Route path="/about/fellows"       element={<AboutFellows />} />
+                    <Route path="/about/chps"          element={<AboutCHPs />} />
                   </Routes>
                 </main>
                 <Footer />

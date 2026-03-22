@@ -62,10 +62,10 @@ export default function Home() {
               Apply to be a Fellow
             </a>
             <a
-              href="#chp-apply"
+              href="/about/chps"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-8 py-4 bg-white text-cc-blue font-bold text-lg rounded-lg hover:bg-cc-blue-light hover:text-white transition-colors shadow-lg"
+              className="inline-block px-8 py-4 bg-cc-blue text-white font-bold text-lg rounded-lg hover:bg-cc-blue-navy transition-colors shadow-lg"
             >
               Apply to be a CHP
             </a>
@@ -160,7 +160,7 @@ export default function Home() {
             Apply to be a Fellow
           </a>
           <a
-            href="#chp-apply"
+            href="/about/chps"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-8 py-4 bg-cc-blue text-white font-bold text-lg rounded-lg hover:bg-cc-blue-navy transition-colors"

@@ -4,7 +4,13 @@ import { useAuth } from '../context/AuthContext'
 
 const navLinks = [
   { label: 'Home',        to: '/' },
-  { label: 'About',       to: '/about' },
+  {
+    label: 'About',
+    children: [
+      { label: 'Fellows',                  to: '/about/fellows' },
+      { label: 'Community Host Partners',  to: '/about/chps' },
+    ],
+  },
   {
     label: 'Cohorts',
     children: [
@@ -21,6 +27,7 @@ const navLinks = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cohortOpen, setCohortOpen] = useState(false)
+  const [aboutOpen, setAboutOpen] = useState(false)
   const { user, isAdmin, isFellow, loading: authLoading, signOut, signInWithGoogle } = useAuth()
   const navigate = useNavigate()
 
@@ -47,7 +54,10 @@ export default function Navbar() {
             link.children ? (
               <div key={link.label} className="relative">
                 <button
-                  onClick={() => setCohortOpen((o) => !o)}
+                  onClick={() => {
+                    if (link.label === 'Cohorts') { setCohortOpen(o => !o); setAboutOpen(false) }
+                    else { setAboutOpen(o => !o); setCohortOpen(false) }
+                  }}
                   className="hover:text-cc-orange transition-colors flex items-center gap-1"
                 >
                   {link.label}
@@ -55,13 +65,13 @@ export default function Navbar() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
-                {cohortOpen && (
+                {(link.label === 'Cohorts' ? cohortOpen : aboutOpen) && (
                   <div className="absolute top-full left-0 mt-1 bg-white text-gray-800 rounded shadow-lg min-w-48 z-50">
                     {link.children.map((child) => (
                       <NavLink
                         key={child.to}
                         to={child.to}
-                        onClick={() => setCohortOpen(false)}
+                        onClick={() => { setCohortOpen(false); setAboutOpen(false) }}
                         className="block px-4 py-2 hover:bg-gray-100 text-sm"
                       >
                         {child.label}
@@ -100,7 +110,7 @@ export default function Navbar() {
                 Apply to be a Fellow
               </a>
               <a
-                href="#chp-apply"
+                href="/about/chps"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block px-4 py-3 text-sm hover:bg-gray-50 rounded-b-lg font-medium border-t border-gray-100"
@@ -178,7 +188,8 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="md:hidden bg-cc-blue-navy px-4 pb-4 flex flex-col gap-3 text-sm font-medium">
           <NavLink to="/" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Home</NavLink>
-          <NavLink to="/about" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">About</NavLink>
+          <NavLink to="/about/fellows" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Fellows</NavLink>
+          <NavLink to="/about/chps" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Community Host Partners</NavLink>
           <NavLink to="/cohorts/food" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Food Insecurity</NavLink>
           <NavLink to="/cohorts/climate" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Climate Action</NavLink>
           <NavLink to="/cohorts/health" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Healthy Futures</NavLink>
@@ -195,7 +206,7 @@ export default function Navbar() {
             Apply to be a Fellow
           </a>
           <a
-            href="#chp-apply"
+            href="/about/chps"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setMobileOpen(false)}
