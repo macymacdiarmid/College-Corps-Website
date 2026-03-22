@@ -77,6 +77,23 @@ export default function Home() {
         </p>
       </section>
 
+      {/* Promo Video */}
+      <section className="bg-cc-blue-dark py-16 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-white mb-3">See College Corps in Action</h2>
+          <p className="text-cc-blue-light mb-10">Watch how our members are making a difference across the Central Coast.</p>
+          <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+            <iframe
+              className="absolute inset-0 w-full h-full rounded-xl shadow-2xl"
+              src="https://www.youtube.com/embed/h94uPxki_cE"
+              title="Cal Poly College Corps Promotional Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Cohort Cards */}
       <section className="bg-gray-50 py-16 px-4">
         <div className="max-w-6xl mx-auto">
