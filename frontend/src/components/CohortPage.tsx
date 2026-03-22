@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { assetUrl } from '../lib/assets'
 import type { CohortContent } from '../content/cohorts'
 import { FoodIcon, ClimateIcon, HealthIcon, EducationIcon } from './CohortIcon'
