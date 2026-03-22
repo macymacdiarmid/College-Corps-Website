@@ -8,6 +8,7 @@ import CohortHealthyFutures from './pages/CohortHealthyFutures'
 import CohortK12Education from './pages/CohortK12Education'
 import Contact from './pages/Contact'
 import Updates from './pages/Updates'
+import FAQ from './pages/FAQ'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
             <Route path="/cohorts/k12"         element={<CohortK12Education />} />
             <Route path="/contact"             element={<Contact />} />
             <Route path="/updates"             element={<Updates />} />
+            <Route path="/faq"                 element={<FAQ />} />
           </Routes>
         </main>
         <Footer />

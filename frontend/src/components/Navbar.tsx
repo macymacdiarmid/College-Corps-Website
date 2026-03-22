@@ -13,6 +13,7 @@ const navLinks = [
     ],
   },
   { label: 'Updates',     to: '/updates' },
+  { label: 'FAQ',         to: '/faq' },
   { label: 'Contact',     to: '/contact' },
 ]
 
@@ -105,6 +106,7 @@ export default function Navbar() {
           <NavLink to="/cohorts/health" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Healthy Futures</NavLink>
           <NavLink to="/cohorts/k12" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">K-12 Education</NavLink>
           <NavLink to="/updates" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Updates</NavLink>
+          <NavLink to="/faq" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">FAQ</NavLink>
           <NavLink to="/contact" onClick={() => setMobileOpen(false)} className="py-1 hover:text-cc-orange">Contact</NavLink>
           <a
             href="https://forms.office.com/Pages/ResponsePage.aspx?id=2wING578lUSVNx03nMoq522akEAKp5lJh4gZBmFwCk1UOU9LWldKUkdaNDlTUkZTVkRCQkFRVlMwQS4u"
