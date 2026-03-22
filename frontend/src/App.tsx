@@ -21,6 +21,9 @@ import Applicants from './pages/admin/Applicants'
 import Contacts from './pages/admin/Contacts'
 import Newsletters from './pages/admin/Newsletters'
 
+import PortalLogin from './pages/portal/Login'
+import MyApplication from './pages/portal/MyApplication'
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -49,6 +52,10 @@ export default function App() {
               </div>
             }
           />
+
+          {/* Applicant portal */}
+          <Route path="/portal/login" element={<PortalLogin />} />
+          <Route path="/portal" element={<MyApplication />} />
 
           {/* Admin login (no sidebar) */}
           <Route path="/admin/login" element={<AdminLogin />} />

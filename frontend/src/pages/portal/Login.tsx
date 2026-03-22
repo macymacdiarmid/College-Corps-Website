@@ -2,23 +2,23 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
-export default function AdminLogin() {
-  const { isAdmin, loading, signInWithGoogle } = useAuth()
+export default function PortalLogin() {
+  const { user, loading, signInWithGoogle } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!loading && isAdmin) navigate('/admin', { replace: true })
-  }, [isAdmin, loading, navigate])
+    if (!loading && user) navigate('/portal', { replace: true })
+  }, [user, loading, navigate])
 
   return (
     <div className="min-h-screen bg-cc-blue-dark flex items-center justify-center px-4">
       <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md text-center">
-        <p className="text-cc-orange font-semibold uppercase tracking-widest text-xs mb-2">Admin Portal</p>
+        <p className="text-cc-orange font-semibold uppercase tracking-widest text-xs mb-2">Applicant Portal</p>
         <h1 className="text-2xl font-bold text-cc-blue mb-2">College Corps</h1>
-        <p className="text-gray-500 text-sm mb-8">Sign in with your Cal Poly Google account to access the admin dashboard.</p>
+        <p className="text-gray-500 text-sm mb-8">Sign in with the Google account you used when you applied to view your application status.</p>
 
         <button
-          onClick={() => signInWithGoogle('/admin')}
+          onClick={() => signInWithGoogle('/portal')}
           className="w-full flex items-center justify-center gap-3 border border-gray-300 rounded-lg px-6 py-3 hover:bg-gray-50 transition-colors font-medium text-gray-700"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@ export default function AdminLogin() {
           Sign in with Google
         </button>
 
-        <p className="mt-6 text-xs text-gray-400">Access restricted to @calpoly.edu accounts only.</p>
+        <p className="mt-6 text-xs text-gray-400">Use the same email address you applied with.</p>
       </div>
     </div>
   )
