@@ -20,13 +20,8 @@ export default function AboutFellows() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative bg-cc-blue-dark text-white py-24 px-4 text-center overflow-hidden">
-        <img
-          src="/media/hero/fellows-hero.jpg"
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
-        />
-        <div className="relative z-10 max-w-3xl mx-auto">
+      <section className="bg-cc-blue-dark text-white py-20 px-4 text-center">
+        <div className="max-w-3xl mx-auto">
           <p className="text-cc-orange font-semibold uppercase tracking-widest text-sm mb-3">College Corps</p>
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Become a Fellow</h1>
           <p className="text-cc-blue-light text-lg md:text-xl leading-relaxed">
@@ -47,6 +42,16 @@ export default function AboutFellows() {
           ))}
         </div>
       </section>
+
+      {/* Full-width photo — bottom 3/4 of image */}
+      <div className="w-full overflow-hidden" style={{ height: '420px' }}>
+        <img
+          src="/media/hero/fellows-hero.jpg"
+          alt="College Corps Fellows"
+          className="w-full h-full object-cover"
+          style={{ objectPosition: 'center 33%' }}
+        />
+      </div>
 
       {/* What is a Fellow */}
       <section className="bg-gray-50 py-16 px-4">
