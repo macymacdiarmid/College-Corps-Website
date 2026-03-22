@@ -22,9 +22,12 @@ import Contacts from './pages/admin/Contacts'
 import Newsletters from './pages/admin/Newsletters'
 import Content from './pages/admin/Content'
 import Media from './pages/admin/Media'
+import Fellows from './pages/admin/Fellows'
+import Announcements from './pages/admin/Announcements'
 
 import PortalLogin from './pages/portal/Login'
 import MyApplication from './pages/portal/MyApplication'
+import FellowDashboard from './pages/fellow/Dashboard'
 import AuthCallback from './pages/AuthCallback'
 
 export default function App() {
@@ -56,12 +59,15 @@ export default function App() {
             }
           />
 
-          {/* Auth callback — smart redirect based on email */}
+          {/* Auth callback — smart redirect based on role */}
           <Route path="/auth/callback" element={<AuthCallback />} />
 
           {/* Applicant portal */}
           <Route path="/portal/login" element={<PortalLogin />} />
           <Route path="/portal" element={<MyApplication />} />
+
+          {/* Fellow portal */}
+          <Route path="/fellow" element={<FellowDashboard />} />
 
           {/* Admin login (no sidebar) */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -73,12 +79,14 @@ export default function App() {
               <AdminGuard>
                 <AdminLayout>
                   <Routes>
-                    <Route path="/"            element={<Dashboard />} />
-                    <Route path="/applicants"  element={<Applicants />} />
-                    <Route path="/contacts"    element={<Contacts />} />
-                    <Route path="/newsletters" element={<Newsletters />} />
-                    <Route path="/content"    element={<Content />} />
-                    <Route path="/media"      element={<Media />} />
+                    <Route path="/"              element={<Dashboard />} />
+                    <Route path="/fellows"       element={<Fellows />} />
+                    <Route path="/announcements" element={<Announcements />} />
+                    <Route path="/applicants"    element={<Applicants />} />
+                    <Route path="/contacts"      element={<Contacts />} />
+                    <Route path="/newsletters"   element={<Newsletters />} />
+                    <Route path="/content"       element={<Content />} />
+                    <Route path="/media"         element={<Media />} />
                   </Routes>
                 </AdminLayout>
               </AdminGuard>

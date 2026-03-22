@@ -6,6 +6,7 @@ interface AuthContextType {
   session: Session | null
   user: Session['user'] | null
   isAdmin: boolean
+  isFellow: boolean
   loading: boolean
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
@@ -16,27 +17,28 @@ const AuthContext = createContext<AuthContextType | null>(null)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [isFellow, setIsFellow] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  async function checkAdmin(email: string | undefined) {
-    if (!email) { setIsAdmin(false); return }
-    const { data } = await supabase
-      .from('admin_users')
-      .select('email')
-      .eq('email', email)
-      .maybeSingle()
-    setIsAdmin(!!data)
+  async function checkRoles(email: string | undefined) {
+    if (!email) { setIsAdmin(false); setIsFellow(false); return }
+    const [adminRes, fellowRes] = await Promise.all([
+      supabase.from('admin_users').select('email').eq('email', email).maybeSingle(),
+      supabase.from('fellow_users').select('email').eq('email', email).maybeSingle(),
+    ])
+    setIsAdmin(!!adminRes.data)
+    setIsFellow(!!fellowRes.data)
   }
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
       setSession(data.session)
-      await checkAdmin(data.session?.user?.email)
+      await checkRoles(data.session?.user?.email)
       setLoading(false)
     })
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session)
-      await checkAdmin(session?.user?.email)
+      await checkRoles(session?.user?.email)
     })
     return () => subscription.unsubscribe()
   }, [])
@@ -59,6 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       session,
       user: session?.user ?? null,
       isAdmin,
+      isFellow,
       loading,
       signInWithGoogle,
       signOut,

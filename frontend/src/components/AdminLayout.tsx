@@ -1,13 +1,15 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const navItems = [
-  { label: 'Dashboard',    to: '/admin' },
-  { label: 'Applicants',   to: '/admin/applicants' },
-  { label: 'Contacts',     to: '/admin/contacts' },
-  { label: 'Newsletters',  to: '/admin/newsletters' },
-  { label: 'Content',      to: '/admin/content' },
-  { label: 'Media',        to: '/admin/media' },
+  { label: 'Dashboard',      to: '/admin' },
+  { label: 'Fellows',        to: '/admin/fellows' },
+  { label: 'Announcements',  to: '/admin/announcements' },
+  { label: 'Applicants',     to: '/admin/applicants' },
+  { label: 'Contacts',       to: '/admin/contacts' },
+  { label: 'Newsletters',    to: '/admin/newsletters' },
+  { label: 'Content',        to: '/admin/content' },
+  { label: 'Media',          to: '/admin/media' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -23,9 +25,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen flex bg-gray-100">
       {/* Sidebar */}
       <aside className="w-56 bg-cc-blue-dark text-white flex flex-col flex-shrink-0">
-        <div className="px-6 py-6 border-b border-cc-blue-navy">
+        <div className="px-6 py-5 border-b border-cc-blue-navy">
           <p className="text-cc-orange font-bold text-xs uppercase tracking-widest mb-1">Admin</p>
           <p className="font-bold text-sm">College Corps</p>
+          <Link
+            to="/"
+            className="inline-block mt-3 text-xs text-cc-blue-light hover:text-white transition-colors"
+          >
+            ← Back to Main Site
+          </Link>
         </div>
         <nav className="flex-1 px-3 py-4 space-y-1">
           {navItems.map((item) => (

@@ -22,7 +22,7 @@ const navLinks = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cohortOpen, setCohortOpen] = useState(false)
-  const { user, isAdmin, signOut, signInWithGoogle } = useAuth()
+  const { user, isAdmin, isFellow, signOut, signInWithGoogle } = useAuth()
   const navigate = useNavigate()
 
   const handleSignOut = async () => {
@@ -30,7 +30,8 @@ export default function Navbar() {
     navigate('/')
   }
 
-  const portalLink = isAdmin ? '/admin' : '/portal'
+  const portalLink = isAdmin ? '/admin' : isFellow ? '/fellow' : '/portal'
+  const portalLabel = isAdmin ? 'Admin Dashboard' : isFellow ? 'My Fellow Portal' : 'My Application'
 
   return (
     <nav className="bg-cc-blue-dark text-white shadow-lg">
@@ -105,7 +106,7 @@ export default function Navbar() {
                   to={portalLink}
                   className="block px-4 py-2.5 text-sm hover:bg-gray-50 rounded-t-lg font-medium"
                 >
-                  {isAdmin ? 'Admin Dashboard' : 'My Application'}
+                  {portalLabel}
                 </Link>
                 <button
                   onClick={handleSignOut}
@@ -173,7 +174,7 @@ export default function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 className="py-1 hover:text-cc-orange"
               >
-                {isAdmin ? 'Admin Dashboard' : 'My Application'}
+                {portalLabel}
               </Link>
               <button
                 onClick={() => { setMobileOpen(false); handleSignOut() }}
