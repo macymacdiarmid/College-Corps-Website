@@ -93,7 +93,7 @@ export default function FellowDashboard() {
         supabase.from('hour_logs').select('*').eq('fellow_email', user!.email).order('log_date', { ascending: false }),
         supabase.from('announcements').select('*').lte('published_at', new Date().toISOString()).order('published_at', { ascending: false }).limit(10),
         supabase.from('postings').select('*').not('published_at', 'is', null).lte('published_at', new Date().toISOString()).order('published_at', { ascending: false }),
-        supabase.from('fellow_photos').select('id, image_url, created_at').eq('fellow_email', user!.email).order('created_at', { ascending: false }),
+        supabase.from('fellow_photos').select('id, image_url, created_at').order('created_at', { ascending: false }),
       ])
       setProfile(profileRes.data)
       setLogs(logsRes.data ?? [])
@@ -132,7 +132,7 @@ export default function FellowDashboard() {
     setUploadingPhotos(false)
     setPhotoUploadDone(true)
     setTimeout(() => setPhotoUploadDone(false), 4000)
-    const { data } = await supabase.from('fellow_photos').select('id, image_url, created_at').eq('fellow_email', user!.email).order('created_at', { ascending: false })
+    const { data } = await supabase.from('fellow_photos').select('id, image_url, created_at').order('created_at', { ascending: false })
     setMyPhotos(data ?? [])
   }
 
