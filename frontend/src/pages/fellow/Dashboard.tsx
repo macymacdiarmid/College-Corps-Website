@@ -99,6 +99,7 @@ export default function FellowDashboard() {
       setLogs(logsRes.data ?? [])
       setAnnouncements(announcementsRes.data ?? [])
       setPostings(postingsRes.data ?? [])
+      console.log('fellow_photos query:', photosRes.data, photosRes.error)
       setMyPhotos(photosRes.data ?? [])
       setLoading(false)
     }
