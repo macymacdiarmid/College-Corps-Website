@@ -23,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isFellow, setIsFellow] = useState(() => localStorage.getItem(ROLE_KEY) === 'fellow')
   const [loading, setLoading] = useState(true)
 
-  async function checkRoles(email: string | undefined) {
+  async function checkRoles(email: string | undefined, attempt = 1): Promise<void> {
     if (!email) {
       setIsAdmin(false)
       setIsFellow(false)
@@ -31,9 +31,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
     try {
-      const [adminRes, fellowRes] = await Promise.all([
-        supabase.from('admin_users').select('email').eq('email', email).maybeSingle(),
-        supabase.from('fellow_users').select('email').eq('email', email).maybeSingle(),
+      const queryTimeout = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('timeout')), 6000)
+      )
+      const [adminRes, fellowRes] = await Promise.race([
+        Promise.all([
+          supabase.from('admin_users').select('email').eq('email', email).maybeSingle(),
+          supabase.from('fellow_users').select('email').eq('email', email).maybeSingle(),
+        ]),
+        queryTimeout,
       ])
       const admin = !!adminRes.data
       const fellow = !!fellowRes.data
@@ -42,8 +48,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (admin) localStorage.setItem(ROLE_KEY, 'admin')
       else if (fellow) localStorage.setItem(ROLE_KEY, 'fellow')
       else localStorage.removeItem(ROLE_KEY)
-    } catch (err) {
-      console.error('checkRoles error', err)
+    } catch {
+      // Retry up to 3 times with increasing delay (DB cold start)
+      if (attempt < 3) {
+        setTimeout(() => checkRoles(email, attempt + 1), attempt * 3000)
+      }
     }
   }
 
