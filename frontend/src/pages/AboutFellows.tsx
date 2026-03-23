@@ -74,7 +74,7 @@ export default function AboutFellows() {
                 src="/media/fellows-what-they-do.jpg"
                 alt="College Corps Fellows in action"
                 className="w-full h-full object-cover"
-                style={{ objectPosition: 'center 10%', transform: 'scale(1.4)', transformOrigin: 'center 15%' }}
+                style={{ objectPosition: 'center 50%', transform: 'scale(1.4)', transformOrigin: 'center 50%' }}
               />
             </div>
           </div>
