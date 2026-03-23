@@ -111,7 +111,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-cc-blue-dark opacity-70" />
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-white mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">See College Corps in Action</h2>
-          <p className="text-cc-blue-light mb-10 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">Watch how our members are making a difference across the Central Coast.</p>
+          <p className="text-white mb-10 drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)]">Watch how our members are making a difference across the Central Coast.</p>
           <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
             <iframe
               className="absolute inset-0 w-full h-full rounded-xl shadow-2xl"
