@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const navItems = [
@@ -18,7 +18,6 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, signOut } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const navigate = useNavigate()
 
   const handleSignOut = () => {
     signOut()
