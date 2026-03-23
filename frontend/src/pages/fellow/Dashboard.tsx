@@ -77,6 +77,7 @@ export default function FellowDashboard() {
   const [postings, setPostings] = useState<Posting[]>([])
   const [loading, setLoading] = useState(true)
   const [lightbox, setLightbox] = useState<string | null>(null)
+  const [myPhotos, setMyPhotos] = useState<{ id: string; image_url: string; created_at: string }[]>([])
   const [photoFiles, setPhotoFiles] = useState<File[]>([])
   const [uploadingPhotos, setUploadingPhotos] = useState(false)
   const [photoUploadDone, setPhotoUploadDone] = useState(false)
@@ -87,16 +88,18 @@ export default function FellowDashboard() {
     if (!user) { navigate('/auth/callback', { replace: true }); return }
 
     async function load() {
-      const [profileRes, logsRes, announcementsRes, postingsRes] = await Promise.all([
+      const [profileRes, logsRes, announcementsRes, postingsRes, photosRes] = await Promise.all([
         supabase.from('fellow_users').select('*').eq('email', user!.email).single(),
         supabase.from('hour_logs').select('*').eq('fellow_email', user!.email).order('log_date', { ascending: false }),
         supabase.from('announcements').select('*').lte('published_at', new Date().toISOString()).order('published_at', { ascending: false }).limit(10),
         supabase.from('postings').select('*').not('published_at', 'is', null).lte('published_at', new Date().toISOString()).order('published_at', { ascending: false }),
+        supabase.from('fellow_photos').select('id, image_url, created_at').eq('fellow_email', user!.email).order('created_at', { ascending: false }),
       ])
       setProfile(profileRes.data)
       setLogs(logsRes.data ?? [])
       setAnnouncements(announcementsRes.data ?? [])
       setPostings(postingsRes.data ?? [])
+      setMyPhotos(photosRes.data ?? [])
       setLoading(false)
     }
     load()
@@ -129,6 +132,8 @@ export default function FellowDashboard() {
     setUploadingPhotos(false)
     setPhotoUploadDone(true)
     setTimeout(() => setPhotoUploadDone(false), 4000)
+    const { data } = await supabase.from('fellow_photos').select('id, image_url, created_at').eq('fellow_email', user!.email).order('created_at', { ascending: false })
+    setMyPhotos(data ?? [])
   }
 
   if (authLoading || loading) {
@@ -423,6 +428,24 @@ export default function FellowDashboard() {
               <p className="text-white text-xs font-semibold leading-relaxed">Your photos help showcase the amazing work you do in the community!</p>
             </div>
           </div>
+
+          {/* Submitted photos grid */}
+          {myPhotos.length > 0 && (
+            <div className="px-6 pb-6">
+              <p className="text-sm font-semibold text-gray-700 mb-3">Your Submitted Photos ({myPhotos.length})</p>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                {myPhotos.map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => setLightbox(p.image_url)}
+                    className="aspect-square rounded-lg overflow-hidden bg-gray-100 hover:opacity-90 transition-opacity"
+                  >
+                    <img src={p.image_url} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Newsletters */}
