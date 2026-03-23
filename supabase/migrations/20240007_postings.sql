@@ -4,7 +4,7 @@
 
 create table if not exists postings (
   id           uuid primary key default gen_random_uuid(),
-  type         text not null check (type in ('service_opportunity', 'event', 'newsletter')),
+  type         text not null check (type in ('service_opportunity', 'event', 'newsletter', 'announcement')),
   title        text not null,
   description  text,
   image_url    text,
