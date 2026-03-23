@@ -76,6 +76,7 @@ export default function FellowDashboard() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [postings, setPostings] = useState<Posting[]>([])
   const [loading, setLoading] = useState(true)
+  const [lightbox, setLightbox] = useState<string | null>(null)
 
   useEffect(() => {
     if (authLoading) return
@@ -362,10 +363,11 @@ export default function FellowDashboard() {
                     <p className="font-medium text-gray-800 text-sm">{n.title}</p>
                     <p className="text-xs text-gray-400 mt-1">{fmt(n.published_at)}</p>
                     {n.image_url && (
-                      <a href={n.image_url} target="_blank" rel="noopener noreferrer"
+                      <button
+                        onClick={() => setLightbox(n.image_url)}
                         className="inline-block mt-3 text-xs px-3 py-1.5 bg-cc-blue text-white rounded-lg hover:bg-cc-blue-navy transition-colors font-medium">
-                        View Full Size
-                      </a>
+                        View Newsletter
+                      </button>
                     )}
                   </div>
                 </div>
@@ -375,6 +377,29 @@ export default function FellowDashboard() {
         </div>
 
       </main>
+
+      {/* Newsletter lightbox */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 overflow-y-auto"
+          onClick={() => setLightbox(null)}
+        >
+          <div className="min-h-full flex flex-col items-center py-8 px-4">
+            <button
+              onClick={() => setLightbox(null)}
+              className="self-end mb-4 text-white bg-white/20 hover:bg-white/30 rounded-full w-10 h-10 flex items-center justify-center text-xl font-bold flex-shrink-0"
+            >
+              ✕
+            </button>
+            <img
+              src={lightbox}
+              alt="Newsletter"
+              className="w-full max-w-3xl rounded-xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
