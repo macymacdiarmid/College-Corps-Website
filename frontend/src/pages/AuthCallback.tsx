@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function AuthCallback() {
-  const { user, isAdmin, isFellow, loading } = useAuth()
+  const { user, isAdmin, isFellow, isCHP, loading } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -11,8 +11,9 @@ export default function AuthCallback() {
     if (!user) { navigate('/', { replace: true }); return }
     if (isAdmin)       navigate('/admin',  { replace: true })
     else if (isFellow) navigate('/fellow', { replace: true })
+    else if (isCHP)    navigate('/chp',    { replace: true })
     else               navigate('/portal', { replace: true })
-  }, [user, isAdmin, isFellow, loading, navigate])
+  }, [user, isAdmin, isFellow, isCHP, loading, navigate])
 
   return (
     <div className="min-h-screen bg-cc-blue-dark flex items-center justify-center">

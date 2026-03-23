@@ -7,6 +7,7 @@ interface AuthContextType {
   user: Session['user'] | null
   isAdmin: boolean
   isFellow: boolean
+  isCHP: boolean
   loading: boolean
   signInWithGoogle: () => Promise<void>
   signOut: () => void
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Seed from cache so role is correct immediately on return visits
   const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem(ROLE_KEY) === 'admin')
   const [isFellow, setIsFellow] = useState(() => localStorage.getItem(ROLE_KEY) === 'fellow')
+  const [isCHP, setIsCHP] = useState(() => localStorage.getItem(ROLE_KEY) === 'chp')
   const [loading, setLoading] = useState(true)
 
   async function checkRoles(email: string | undefined, attempt = 1): Promise<void> {
@@ -34,19 +36,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const queryTimeout = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error('timeout')), 6000)
       )
-      const [adminRes, fellowRes] = await Promise.race([
+      const [adminRes, fellowRes, chpRes] = await Promise.race([
         Promise.all([
           supabase.from('admin_users').select('email').eq('email', email).maybeSingle(),
           supabase.from('fellow_users').select('email').eq('email', email).maybeSingle(),
+          supabase.from('chp_users').select('email').eq('email', email).maybeSingle(),
         ]),
         queryTimeout,
       ])
       const admin = !!adminRes.data
       const fellow = !!fellowRes.data
+      const chp = !!chpRes.data
       setIsAdmin(admin)
       setIsFellow(fellow)
+      setIsCHP(chp)
       if (admin) localStorage.setItem(ROLE_KEY, 'admin')
       else if (fellow) localStorage.setItem(ROLE_KEY, 'fellow')
+      else if (chp) localStorage.setItem(ROLE_KEY, 'chp')
       else localStorage.removeItem(ROLE_KEY)
     } catch {
       // Retry up to 3 times with increasing delay (DB cold start)
@@ -100,6 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user: session?.user ?? null,
       isAdmin,
       isFellow,
+      isCHP,
       loading,
       signInWithGoogle,
       signOut,

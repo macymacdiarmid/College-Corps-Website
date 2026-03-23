@@ -27,6 +27,8 @@ import Media from './pages/admin/Media'
 import Fellows from './pages/admin/Fellows'
 import Announcements from './pages/admin/Announcements'
 import FellowPhotos from './pages/admin/FellowPhotos'
+import CHPPostings from './pages/admin/CHPPostings'
+import CHPPortal from './pages/chp/Portal'
 
 import PortalLogin from './pages/portal/Login'
 import MyApplication from './pages/portal/MyApplication'
@@ -74,6 +76,9 @@ export default function App() {
           {/* Fellow portal */}
           <Route path="/fellow" element={<FellowDashboard />} />
 
+          {/* CHP portal */}
+          <Route path="/chp" element={<CHPPortal />} />
+
           {/* Admin login (no sidebar) */}
           <Route path="/admin/login" element={<AdminLogin />} />
 
@@ -91,6 +96,7 @@ export default function App() {
                     <Route path="/contacts"      element={<Contacts />} />
                     <Route path="/postings"      element={<Postings />} />
                     <Route path="/fellow-photos"  element={<FellowPhotos />} />
+                    <Route path="/chp-postings"   element={<CHPPostings />} />
                     <Route path="/content"       element={<Content />} />
                     <Route path="/media"         element={<Media />} />
                   </Routes>

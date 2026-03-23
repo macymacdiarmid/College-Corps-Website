@@ -29,15 +29,15 @@ export default function Navbar() {
   const [cohortOpen, setCohortOpen] = useState(false)
   const [aboutOpen, setAboutOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-  const { user, isAdmin, isFellow, loading: authLoading, signOut, signInWithGoogle } = useAuth()
+  const { user, isAdmin, isFellow, isCHP, loading: authLoading, signOut, signInWithGoogle } = useAuth()
   const handleSignOut = () => {
     setProfileOpen(false)
     signOut()
     window.location.href = '/'
   }
 
-  const portalLink = isAdmin ? '/admin' : isFellow ? '/fellow' : '/portal'
-  const portalLabel = isAdmin ? 'Admin Dashboard' : isFellow ? 'My Fellow Portal' : 'My Application'
+  const portalLink = isAdmin ? '/admin' : isFellow ? '/fellow' : isCHP ? '/chp' : '/portal'
+  const portalLabel = isAdmin ? 'Admin Dashboard' : isFellow ? 'My Fellow Portal' : isCHP ? 'CHP Portal' : 'My Application'
 
   return (
     <nav className="bg-cc-blue-dark text-white shadow-lg fixed top-0 left-0 right-0 z-50">
