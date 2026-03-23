@@ -136,6 +136,7 @@ export default function FellowDashboard() {
   const monthlyPct = Math.min(100, (monthlyLogged / profile.hours_required_monthly) * 100)
 
   const otherAnnouncements = announcements.filter(a => a.type !== 'service_opportunity')
+  const postingAnnouncements = postings.filter(p => p.type === 'announcement')
   const serviceOpps = postings.filter(p => p.type === 'service_opportunity')
   const events = postings.filter(p => p.type === 'event')
   const newsletters = postings.filter(p => p.type === 'newsletter')
@@ -254,10 +255,22 @@ export default function FellowDashboard() {
             <div className="px-6 py-4 border-b border-gray-100">
               <h2 className="font-bold text-cc-blue">Announcements</h2>
             </div>
-            {otherAnnouncements.length === 0 ? (
+            {otherAnnouncements.length === 0 && postingAnnouncements.length === 0 ? (
               <p className="text-gray-400 text-sm p-6">No announcements yet.</p>
             ) : (
               <div className="divide-y divide-gray-100">
+                {postingAnnouncements.map(a => (
+                  <div key={a.id} className="px-6 py-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-base">🔔</span>
+                      <span className="text-xs text-gray-400">
+                        {new Date(a.published_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                      </span>
+                    </div>
+                    <p className="font-medium text-gray-800 text-sm">{a.title}</p>
+                    {a.description && <p className="text-sm text-gray-500 mt-1 leading-relaxed">{a.description}</p>}
+                  </div>
+                ))}
                 {otherAnnouncements.map(a => (
                   <div key={a.id} className="px-6 py-4">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">

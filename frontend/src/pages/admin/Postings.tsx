@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabaseClient'
 
 interface Posting {
   id: string
-  type: 'service_opportunity' | 'event' | 'newsletter'
+  type: 'service_opportunity' | 'event' | 'newsletter' | 'announcement'
   title: string
   description: string | null
   image_url: string | null
@@ -17,15 +17,17 @@ const typeLabel: Record<string, string> = {
   service_opportunity: 'Service Opportunity',
   event: 'Event',
   newsletter: 'Newsletter',
+  announcement: 'Announcement',
 }
 const typeColor: Record<string, string> = {
   service_opportunity: 'bg-green-100 text-green-700',
   event: 'bg-purple-100 text-purple-700',
   newsletter: 'bg-blue-100 text-blue-700',
+  announcement: 'bg-yellow-100 text-yellow-700',
 }
 
 const emptyForm = {
-  type: 'service_opportunity' as 'service_opportunity' | 'event' | 'newsletter',
+  type: 'service_opportunity' as 'service_opportunity' | 'event' | 'newsletter' | 'announcement',
   title: '',
   description: '',
   image_url: '',
@@ -76,13 +78,14 @@ export default function Postings() {
       }
     }
 
+    const noExtras = form.type === 'newsletter' || form.type === 'announcement'
     const payload = {
       type: form.type,
       title: form.title,
       description: form.type === 'newsletter' ? null : (form.description || null),
-      image_url,
-      event_date: form.type === 'newsletter' ? null : (form.event_date || null),
-      apply_link: form.type === 'newsletter' ? null : (form.apply_link || null),
+      image_url: form.type === 'announcement' ? null : image_url,
+      event_date: noExtras ? null : (form.event_date || null),
+      apply_link: noExtras ? null : (form.apply_link || null),
       published_at: publish ? new Date().toISOString() : null,
     }
 
@@ -138,6 +141,7 @@ export default function Postings() {
   }
 
   const isNewsletter = form.type === 'newsletter'
+  const isAnnouncement = form.type === 'announcement'
   const filtered = postings.filter(p => filter === 'all' || p.type === filter)
 
   return (
@@ -165,6 +169,7 @@ export default function Postings() {
             { value: 'service_opportunity', label: 'Service Opportunities' },
             { value: 'event', label: 'Events' },
             { value: 'newsletter', label: 'Newsletters' },
+            { value: 'announcement', label: 'Announcements' },
           ].map(tab => (
             <button
               key={tab.value}
@@ -190,7 +195,7 @@ export default function Postings() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
             <div className="flex gap-3 flex-wrap">
-              {(['service_opportunity', 'event', 'newsletter'] as const).map(t => (
+              {(['service_opportunity', 'event', 'newsletter', 'announcement'] as const).map(t => (
                 <button
                   key={t}
                   type="button"
@@ -234,8 +239,8 @@ export default function Postings() {
               </div>
             )}
 
-            {/* Image upload */}
-            <div className="sm:col-span-2">
+            {/* Image upload — not for announcements */}
+            {!isAnnouncement && <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 {isNewsletter ? 'Newsletter Image (PNG/JPG)' : 'Image (optional)'}
               </label>
@@ -253,10 +258,10 @@ export default function Postings() {
                 </div>
               )}
               {imageFile && <p className="text-xs text-green-600 mt-1">Ready to upload: {imageFile.name}</p>}
-            </div>
+            </div>}
 
-            {/* Date & Time — not for newsletter */}
-            {!isNewsletter && (
+            {/* Date & Time — not for newsletter or announcement */}
+            {!isNewsletter && !isAnnouncement && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Date & Time</label>
                 <input
@@ -268,8 +273,8 @@ export default function Postings() {
               </div>
             )}
 
-            {/* Apply/RSVP link — not for newsletter */}
-            {!isNewsletter && (
+            {/* Apply/RSVP link — not for newsletter or announcement */}
+            {!isNewsletter && !isAnnouncement && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Apply / RSVP Link</label>
                 <input
