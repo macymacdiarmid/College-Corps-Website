@@ -45,26 +45,28 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function load() {
-      const [appsRes, contactsRes, newslettersRes] = await Promise.all([
-        supabase.from('applications').select('cohort, created_at, id, name, email').order('created_at', { ascending: false }),
-        supabase.from('contact_submissions').select('id, name, email, created_at').order('created_at', { ascending: false }),
-        supabase.from('newsletters').select('id', { count: 'exact', head: true }),
-      ])
-
-      const apps = appsRes.data ?? []
-      const contacts = contactsRes.data ?? []
-
-      setStats({
-        totalApplicants: apps.length,
-        byFood:    apps.filter(a => a.cohort === 'food').length,
-        byClimate: apps.filter(a => a.cohort === 'climate').length,
-        byHealth:  apps.filter(a => a.cohort === 'health').length,
-        byK12:     apps.filter(a => a.cohort === 'k12').length,
-        totalContacts: contacts.length,
-        totalNewsletters: newslettersRes.count ?? 0,
-      })
-      setRecentApps(apps.slice(0, 5))
-      setRecentContacts(contacts.slice(0, 5))
+      const timeout = setTimeout(() => setLoading(false), 10000)
+      try {
+        const [appsRes, contactsRes, newslettersRes] = await Promise.all([
+          supabase.from('applications').select('cohort, created_at, id, name, email').order('created_at', { ascending: false }),
+          supabase.from('contact_submissions').select('id, name, email, created_at').order('created_at', { ascending: false }),
+          supabase.from('newsletters').select('id', { count: 'exact', head: true }),
+        ])
+        const apps = appsRes.data ?? []
+        const contacts = contactsRes.data ?? []
+        setStats({
+          totalApplicants: apps.length,
+          byFood:    apps.filter(a => a.cohort === 'food').length,
+          byClimate: apps.filter(a => a.cohort === 'climate').length,
+          byHealth:  apps.filter(a => a.cohort === 'health').length,
+          byK12:     apps.filter(a => a.cohort === 'k12').length,
+          totalContacts: contacts.length,
+          totalNewsletters: newslettersRes.count ?? 0,
+        })
+        setRecentApps(apps.slice(0, 5))
+        setRecentContacts(contacts.slice(0, 5))
+      } catch { /* leave state empty */ }
+      clearTimeout(timeout)
       setLoading(false)
     }
     load()

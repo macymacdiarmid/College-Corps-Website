@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const navLinks = [
@@ -28,12 +28,12 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [cohortOpen, setCohortOpen] = useState(false)
   const [aboutOpen, setAboutOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
   const { user, isAdmin, isFellow, loading: authLoading, signOut, signInWithGoogle } = useAuth()
-  const navigate = useNavigate()
-
-  const handleSignOut = async () => {
-    await signOut()
-    navigate('/')
+  const handleSignOut = () => {
+    setProfileOpen(false)
+    signOut()
+    window.location.href = '/'
   }
 
   const portalLink = isAdmin ? '/admin' : isFellow ? '/fellow' : '/portal'
@@ -110,7 +110,7 @@ export default function Navbar() {
                 Apply to be a Fellow
               </a>
               <a
-                href="/about/chps"
+                href="https://forms.office.com/pages/responsepage.aspx?id=2wING578lUSVNx03nMoq53U0ZmIQ8r9JvquZJjmAnzBUMVdZSks2S0tEUlE2OFQyM1EwWVJVUktTWSQlQCN0PWcu&route=shorturl"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block px-4 py-3 text-sm hover:bg-gray-50 rounded-b-lg font-medium border-t border-gray-100"
@@ -124,34 +124,40 @@ export default function Navbar() {
           {authLoading ? (
             <div className="w-8 h-8 rounded-full bg-cc-blue-navy animate-pulse ml-1" />
           ) : user ? (
-            <div className="relative group ml-1">
-              <button className="flex items-center gap-1.5">
+            <div className="relative ml-1">
+              <button
+                onClick={() => setProfileOpen(o => !o)}
+                className="flex items-center gap-1.5"
+              >
                 {user.user_metadata?.avatar_url ? (
                   <img
                     src={user.user_metadata.avatar_url}
                     alt="Profile"
-                    className="w-8 h-8 rounded-full object-cover ring-2 ring-transparent group-hover:ring-cc-orange transition-all"
+                    className="w-8 h-8 rounded-full object-cover ring-2 ring-transparent hover:ring-cc-orange transition-all"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-cc-blue flex items-center justify-center text-white text-sm font-bold ring-2 ring-transparent group-hover:ring-cc-orange transition-all">
+                  <div className="w-8 h-8 rounded-full bg-cc-blue flex items-center justify-center text-white text-sm font-bold ring-2 ring-transparent hover:ring-cc-orange transition-all">
                     {user.email?.charAt(0).toUpperCase()}
                   </div>
                 )}
               </button>
-              <div className="absolute right-0 top-full mt-2 bg-white text-gray-800 rounded-lg shadow-lg min-w-40 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                <Link
-                  to={portalLink}
-                  className="block px-4 py-2.5 text-sm hover:bg-gray-50 rounded-t-lg font-medium"
-                >
-                  {portalLabel}
-                </Link>
-                <button
-                  onClick={handleSignOut}
-                  className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-gray-50 rounded-b-lg"
-                >
-                  Sign Out
-                </button>
-              </div>
+              {profileOpen && (
+                <div className="absolute right-0 top-full mt-2 bg-white text-gray-800 rounded-lg shadow-lg min-w-40 z-50">
+                  <Link
+                    to={portalLink}
+                    onClick={() => setProfileOpen(false)}
+                    className="block px-4 py-2.5 text-sm hover:bg-gray-50 rounded-t-lg font-medium"
+                  >
+                    {portalLabel}
+                  </Link>
+                  <button
+                    onClick={() => { setProfileOpen(false); handleSignOut() }}
+                    className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:bg-gray-50 rounded-b-lg"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <button
@@ -206,7 +212,7 @@ export default function Navbar() {
             Apply to be a Fellow
           </a>
           <a
-            href="/about/chps"
+            href="https://forms.office.com/pages/responsepage.aspx?id=2wING578lUSVNx03nMoq53U0ZmIQ8r9JvquZJjmAnzBUMVdZSks2S0tEUlE2OFQyM1EwWVJVUktTWSQlQCN0PWcu&route=shorturl"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setMobileOpen(false)}

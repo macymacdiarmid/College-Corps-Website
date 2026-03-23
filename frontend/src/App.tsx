@@ -21,7 +21,7 @@ import AdminLogin from './pages/admin/Login'
 import Dashboard from './pages/admin/Dashboard'
 import Applicants from './pages/admin/Applicants'
 import Contacts from './pages/admin/Contacts'
-import Newsletters from './pages/admin/Newsletters'
+import Postings from './pages/admin/Postings'
 import Content from './pages/admin/Content'
 import Media from './pages/admin/Media'
 import Fellows from './pages/admin/Fellows'
@@ -88,7 +88,7 @@ export default function App() {
                     <Route path="/announcements" element={<Announcements />} />
                     <Route path="/applicants"    element={<Applicants />} />
                     <Route path="/contacts"      element={<Contacts />} />
-                    <Route path="/newsletters"   element={<Newsletters />} />
+                    <Route path="/postings"      element={<Postings />} />
                     <Route path="/content"       element={<Content />} />
                     <Route path="/media"         element={<Media />} />
                   </Routes>

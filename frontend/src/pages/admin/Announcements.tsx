@@ -36,8 +36,12 @@ export default function Announcements() {
   const [saved, setSaved] = useState(false)
 
   async function load() {
-    const { data } = await supabase.from('announcements').select('*').order('created_at', { ascending: false })
-    setItems(data ?? [])
+    const timeout = setTimeout(() => setLoading(false), 10000)
+    try {
+      const { data } = await supabase.from('announcements').select('*').order('created_at', { ascending: false })
+      setItems(data ?? [])
+    } catch { /* leave state empty */ }
+    clearTimeout(timeout)
     setLoading(false)
   }
 

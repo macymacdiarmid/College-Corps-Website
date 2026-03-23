@@ -29,6 +29,7 @@ const emptyForm = {
 
 export default function Fellows() {
   const [fellows, setFellows] = useState<Fellow[]>([])
+  const [cohortFilter, setCohortFilter] = useState<string>('all')
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editing, setEditing] = useState<string | null>(null)
@@ -38,13 +39,17 @@ export default function Fellows() {
   const [loggingHours, setLoggingHours] = useState(false)
 
   async function load() {
-    const { data: fellowData } = await supabase.from('fellow_users').select('*').order('name')
-    const { data: logData } = await supabase.from('hour_logs').select('fellow_email, hours')
-    const hoursByFellow: Record<string, number> = {}
-    logData?.forEach(l => {
-      hoursByFellow[l.fellow_email] = (hoursByFellow[l.fellow_email] ?? 0) + Number(l.hours)
-    })
-    setFellows((fellowData ?? []).map(f => ({ ...f, total_hours: hoursByFellow[f.email] ?? 0 })))
+    const timeout = setTimeout(() => setLoading(false), 10000)
+    try {
+      const { data: fellowData } = await supabase.from('fellow_users').select('*').order('name')
+      const { data: logData } = await supabase.from('hour_logs').select('fellow_email, hours')
+      const hoursByFellow: Record<string, number> = {}
+      logData?.forEach(l => {
+        hoursByFellow[l.fellow_email] = (hoursByFellow[l.fellow_email] ?? 0) + Number(l.hours)
+      })
+      setFellows((fellowData ?? []).map(f => ({ ...f, total_hours: hoursByFellow[f.email] ?? 0 })))
+    } catch { /* leave state empty */ }
+    clearTimeout(timeout)
     setLoading(false)
   }
 
@@ -96,12 +101,23 @@ export default function Fellows() {
           <h1 className="text-2xl font-bold text-cc-blue">Fellows</h1>
           <p className="text-gray-500 text-sm mt-1">{fellows.length} active fellows</p>
         </div>
-        {!showForm && (
-          <button onClick={() => { setEditing(null); setForm(emptyForm); setShowForm(true) }}
-            className="px-5 py-2 bg-cc-orange text-white rounded-lg text-sm font-medium hover:bg-cc-orange-dark transition-colors">
-            + Add Fellow
-          </button>
-        )}
+        <div className="flex items-center gap-3">
+          <select
+            value={cohortFilter}
+            onChange={e => setCohortFilter(e.target.value)}
+            className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cc-blue"
+          >
+            <option value="all">All Cohorts</option>
+            <option value="none">No Cohort</option>
+            {Object.entries(cohortLabel).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          </select>
+          {!showForm && (
+            <button onClick={() => { setEditing(null); setForm(emptyForm); setShowForm(true) }}
+              className="px-5 py-2 bg-cc-orange text-white rounded-lg text-sm font-medium hover:bg-cc-orange-dark transition-colors">
+              + Add Fellow
+            </button>
+          )}
+        </div>
       </div>
 
       {showForm && (
@@ -221,7 +237,11 @@ export default function Fellows() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {fellows.map(f => (
+              {fellows.filter(f =>
+                cohortFilter === 'all' ? true :
+                cohortFilter === 'none' ? !f.cohort :
+                f.cohort === cohortFilter
+              ).map(f => (
                 <tr key={f.email} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <p className="font-medium text-gray-800">{f.name}</p>

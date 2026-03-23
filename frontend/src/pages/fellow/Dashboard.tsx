@@ -22,11 +22,14 @@ interface HourLog {
   description: string | null
 }
 
-interface Newsletter {
+interface Posting {
   id: string
+  type: string
   title: string
-  content: string
-  pdf_url: string | null
+  description: string | null
+  image_url: string | null
+  event_date: string | null
+  apply_link: string | null
   published_at: string
 }
 
@@ -71,7 +74,7 @@ export default function FellowDashboard() {
   const [profile, setProfile] = useState<FellowProfile | null>(null)
   const [logs, setLogs] = useState<HourLog[]>([])
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
-  const [newsletters, setNewsletters] = useState<Newsletter[]>([])
+  const [postings, setPostings] = useState<Posting[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -79,24 +82,24 @@ export default function FellowDashboard() {
     if (!user) { navigate('/auth/callback', { replace: true }); return }
 
     async function load() {
-      const [profileRes, logsRes, announcementsRes, newslettersRes] = await Promise.all([
+      const [profileRes, logsRes, announcementsRes, postingsRes] = await Promise.all([
         supabase.from('fellow_users').select('*').eq('email', user!.email).single(),
         supabase.from('hour_logs').select('*').eq('fellow_email', user!.email).order('log_date', { ascending: false }),
         supabase.from('announcements').select('*').lte('published_at', new Date().toISOString()).order('published_at', { ascending: false }).limit(10),
-        supabase.from('newsletters').select('*').not('published_at', 'is', null).order('published_at', { ascending: false }),
+        supabase.from('postings').select('*').not('published_at', 'is', null).lte('published_at', new Date().toISOString()).order('published_at', { ascending: false }),
       ])
       setProfile(profileRes.data)
       setLogs(logsRes.data ?? [])
       setAnnouncements(announcementsRes.data ?? [])
-      setNewsletters(newslettersRes.data ?? [])
+      setPostings(postingsRes.data ?? [])
       setLoading(false)
     }
     load()
   }, [user, authLoading, navigate])
 
-  const handleSignOut = async () => {
-    await signOut()
-    navigate('/')
+  const handleSignOut = () => {
+    signOut()
+    window.location.href = '/'
   }
 
   if (authLoading || loading) {
@@ -131,8 +134,10 @@ export default function FellowDashboard() {
   const monthlyRemaining = Math.max(0, profile.hours_required_monthly - monthlyLogged)
   const monthlyPct = Math.min(100, (monthlyLogged / profile.hours_required_monthly) * 100)
 
-  const serviceOpps = announcements.filter(a => a.type === 'service_opportunity')
   const otherAnnouncements = announcements.filter(a => a.type !== 'service_opportunity')
+  const serviceOpps = postings.filter(p => p.type === 'service_opportunity')
+  const events = postings.filter(p => p.type === 'event')
+  const newsletters = postings.filter(p => p.type === 'newsletter')
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -277,19 +282,66 @@ export default function FellowDashboard() {
               <p className="text-gray-400 text-sm p-6">No service opportunities posted yet.</p>
             ) : (
               <div className="divide-y divide-gray-100">
-                {serviceOpps.map(a => (
-                  <div key={a.id} className="px-6 py-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">Service Opp</span>
-                      <span className="text-xs text-gray-400">{fmt(a.published_at)}</span>
+                {serviceOpps.map(p => (
+                  <div key={p.id} className="px-6 py-4 flex gap-4">
+                    {p.image_url && (
+                      <img src={p.image_url} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-800 text-sm">{p.title}</p>
+                      {p.event_date && (
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          {new Date(p.event_date).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                        </p>
+                      )}
+                      {p.description && <p className="text-sm text-gray-500 mt-1 leading-relaxed line-clamp-3">{p.description}</p>}
+                      {p.apply_link && (
+                        <a href={p.apply_link} target="_blank" rel="noopener noreferrer"
+                          className="inline-block mt-2 text-xs px-3 py-1.5 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium">
+                          Apply / RSVP
+                        </a>
+                      )}
                     </div>
-                    <p className="font-medium text-gray-800 text-sm">{a.title}</p>
-                    <p className="text-sm text-gray-500 mt-1 leading-relaxed">{a.body}</p>
                   </div>
                 ))}
               </div>
             )}
           </div>
+        </div>
+
+        {/* Events */}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="font-bold text-cc-blue">Events</h2>
+          </div>
+          {events.length === 0 ? (
+            <p className="text-gray-400 text-sm p-6">No upcoming events posted yet.</p>
+          ) : (
+            <div className="divide-y divide-gray-100">
+              {events.map(p => (
+                <div key={p.id} className="px-6 py-4 flex gap-4">
+                  {p.image_url && (
+                    <img src={p.image_url} alt="" className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-800">{p.title}</p>
+                    {p.event_date && (
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {new Date(p.event_date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                      </p>
+                    )}
+                    {p.description && <p className="text-sm text-gray-500 mt-1 leading-relaxed line-clamp-3">{p.description}</p>}
+                    {p.apply_link && (
+                      <a href={p.apply_link} target="_blank" rel="noopener noreferrer"
+                        className="inline-block mt-2 text-xs px-3 py-1.5 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors font-medium">
+                        RSVP
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Newsletters */}
@@ -300,24 +352,22 @@ export default function FellowDashboard() {
           {newsletters.length === 0 ? (
             <p className="text-gray-400 text-sm p-6">No newsletters published yet.</p>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-6">
               {newsletters.map(n => (
-                <div key={n.id} className="px-6 py-4 flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <p className="font-medium text-gray-800">{n.title}</p>
-                    <p className="text-sm text-gray-500 mt-0.5 line-clamp-2">{n.content}</p>
-                    <p className="text-xs text-gray-400 mt-1">{fmt(n.published_at)}</p>
-                  </div>
-                  {n.pdf_url && (
-                    <a
-                      href={n.pdf_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-shrink-0 text-xs px-3 py-1.5 bg-cc-orange text-white rounded-lg hover:bg-cc-orange-dark transition-colors font-medium"
-                    >
-                      View PDF
-                    </a>
+                <div key={n.id} className="border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                  {n.image_url && (
+                    <img src={n.image_url} alt={n.title} className="w-full h-40 object-cover" />
                   )}
+                  <div className="p-4">
+                    <p className="font-medium text-gray-800 text-sm">{n.title}</p>
+                    <p className="text-xs text-gray-400 mt-1">{fmt(n.published_at)}</p>
+                    {n.image_url && (
+                      <a href={n.image_url} target="_blank" rel="noopener noreferrer"
+                        className="inline-block mt-3 text-xs px-3 py-1.5 bg-cc-blue text-white rounded-lg hover:bg-cc-blue-navy transition-colors font-medium">
+                        View Full Size
+                      </a>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

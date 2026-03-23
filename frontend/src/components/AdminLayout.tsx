@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const navItems = [
@@ -7,18 +7,17 @@ const navItems = [
   { label: 'Announcements',  to: '/admin/announcements' },
   { label: 'Applicants',     to: '/admin/applicants' },
   { label: 'Contacts',       to: '/admin/contacts' },
-  { label: 'Newsletters',    to: '/admin/newsletters' },
+  { label: 'Postings',       to: '/admin/postings' },
   { label: 'Content',        to: '/admin/content' },
   { label: 'Media',          to: '/admin/media' },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, signOut } = useAuth()
-  const navigate = useNavigate()
 
-  const handleSignOut = async () => {
-    await signOut()
-    navigate('/admin/login')
+  const handleSignOut = () => {
+    signOut()
+    window.location.href = '/'
   }
 
   return (

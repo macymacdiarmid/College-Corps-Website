@@ -1,4 +1,4 @@
-const CHP_APPLY_URL = '#chp-apply' // Replace with real CHP application URL
+const CHP_APPLY_URL = 'https://forms.office.com/pages/responsepage.aspx?id=2wING578lUSVNx03nMoq53U0ZmIQ8r9JvquZJjmAnzBUMVdZSks2S0tEUlE2OFQyM1EwWVJVUktTWSQlQCN0PWcu&route=shorturl'
 
 const highlights = [
   { icon: '🏢', label: 'Host a Fellow', desc: 'Welcome a Cal Poly student into your organization for a year of dedicated service' },

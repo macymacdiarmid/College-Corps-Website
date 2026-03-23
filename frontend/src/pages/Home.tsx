@@ -62,7 +62,7 @@ export default function Home() {
               Apply to be a Fellow
             </a>
             <a
-              href="/about/chps"
+              href="https://forms.office.com/pages/responsepage.aspx?id=2wING578lUSVNx03nMoq53U0ZmIQ8r9JvquZJjmAnzBUMVdZSks2S0tEUlE2OFQyM1EwWVJVUktTWSQlQCN0PWcu&route=shorturl"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block px-8 py-4 bg-cc-blue text-white font-bold text-lg rounded-lg hover:bg-cc-blue-navy transition-colors shadow-lg"
@@ -78,18 +78,38 @@ export default function Home() {
         <h2 className="text-3xl font-bold text-cc-blue mb-6">About the Program</h2>
         <p className="text-gray-600 text-lg leading-relaxed mb-4">
           Cal Poly College Corps is part of California's statewide AmeriCorps initiative. Students commit to
-          300 hours of community service over the academic year and receive a $10,000 education award upon completion.
+          450 hours of community service over the academic year and receive a $10,000 education award upon completion.
         </p>
         <p className="text-gray-600 text-lg leading-relaxed">
           Members are placed in one of four cohorts aligned with pressing community needs — food insecurity,
           climate action, healthy futures, and K-12 education. Each cohort is partnered with local nonprofits
           and community organizations to ensure your service has a real and lasting impact.
         </p>
+        <div className="flex flex-wrap gap-4 justify-center mt-8">
+          <Link
+            to="/about/fellows"
+            className="px-6 py-3 border-2 border-cc-blue text-cc-blue font-semibold rounded-lg hover:bg-cc-blue hover:text-white transition-colors text-sm"
+          >
+            Learn more about our Fellowship Program
+          </Link>
+          <Link
+            to="/about/chps"
+            className="px-6 py-3 border-2 border-cc-blue text-cc-blue font-semibold rounded-lg hover:bg-cc-blue hover:text-white transition-colors text-sm"
+          >
+            Learn more about our Community Host Partners
+          </Link>
+        </div>
       </section>
 
       {/* Promo Video */}
-      <section className="bg-cc-blue-dark py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative py-16 px-4 overflow-hidden">
+        <img
+          src="/media/college-corps-bg.png"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-cc-blue-dark opacity-70" />
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-white mb-3">See College Corps in Action</h2>
           <p className="text-cc-blue-light mb-10">Watch how our members are making a difference across the Central Coast.</p>
           <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
@@ -129,10 +149,10 @@ export default function Home() {
       </section>
 
       {/* Stats */}
-      <section className="bg-cc-blue text-white py-16 px-4">
+      <section className="bg-cc-blue-dark text-white py-16 px-4">
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div>
-            <p className="text-5xl font-bold text-cc-orange">300</p>
+            <p className="text-5xl font-bold text-cc-orange">450</p>
             <p className="mt-2 text-cc-blue-light">Service Hours per Year</p>
           </div>
           <div>
@@ -160,7 +180,7 @@ export default function Home() {
             Apply to be a Fellow
           </a>
           <a
-            href="/about/chps"
+            href="https://forms.office.com/pages/responsepage.aspx?id=2wING578lUSVNx03nMoq53U0ZmIQ8r9JvquZJjmAnzBUMVdZSks2S0tEUlE2OFQyM1EwWVJVUktTWSQlQCN0PWcu&route=shorturl"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-8 py-4 bg-cc-blue text-white font-bold text-lg rounded-lg hover:bg-cc-blue-navy transition-colors"

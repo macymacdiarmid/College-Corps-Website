@@ -9,38 +9,62 @@ interface AuthContextType {
   isFellow: boolean
   loading: boolean
   signInWithGoogle: () => Promise<void>
-  signOut: () => Promise<void>
+  signOut: () => void
 }
+
+const ROLE_KEY = 'cc_role'
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isFellow, setIsFellow] = useState(false)
+  // Seed from cache so role is correct immediately on return visits
+  const [isAdmin, setIsAdmin] = useState(() => localStorage.getItem(ROLE_KEY) === 'admin')
+  const [isFellow, setIsFellow] = useState(() => localStorage.getItem(ROLE_KEY) === 'fellow')
   const [loading, setLoading] = useState(true)
 
   async function checkRoles(email: string | undefined) {
-    if (!email) { setIsAdmin(false); setIsFellow(false); return }
-    const [adminRes, fellowRes] = await Promise.all([
-      supabase.from('admin_users').select('email').eq('email', email).maybeSingle(),
-      supabase.from('fellow_users').select('email').eq('email', email).maybeSingle(),
-    ])
-    setIsAdmin(!!adminRes.data)
-    setIsFellow(!!fellowRes.data)
+    if (!email) {
+      setIsAdmin(false)
+      setIsFellow(false)
+      localStorage.removeItem(ROLE_KEY)
+      return
+    }
+    try {
+      const [adminRes, fellowRes] = await Promise.all([
+        supabase.from('admin_users').select('email').eq('email', email).maybeSingle(),
+        supabase.from('fellow_users').select('email').eq('email', email).maybeSingle(),
+      ])
+      const admin = !!adminRes.data
+      const fellow = !!fellowRes.data
+      setIsAdmin(admin)
+      setIsFellow(fellow)
+      if (admin) localStorage.setItem(ROLE_KEY, 'admin')
+      else if (fellow) localStorage.setItem(ROLE_KEY, 'fellow')
+      else localStorage.removeItem(ROLE_KEY)
+    } catch (err) {
+      console.error('checkRoles error', err)
+    }
   }
 
   useEffect(() => {
+    // Give Supabase free tier up to 30s to wake the database on first visit
+    const timeout = setTimeout(() => setLoading(false), 30000)
+
     supabase.auth.getSession().then(async ({ data }) => {
       setSession(data.session)
       await checkRoles(data.session?.user?.email)
+      clearTimeout(timeout)
       setLoading(false)
-    })
+    }).catch(() => { clearTimeout(timeout); setLoading(false) })
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session)
       await checkRoles(session?.user?.email)
+      clearTimeout(timeout)
+      setLoading(false)
     })
-    return () => subscription.unsubscribe()
+    return () => { clearTimeout(timeout); subscription.unsubscribe() }
   }, [])
 
   const signInWithGoogle = async () => {
@@ -52,8 +76,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })
   }
 
-  const signOut = async () => {
-    await supabase.auth.signOut()
+  // Clear the session directly from localStorage — bypasses the hanging Supabase API call
+  const signOut = () => {
+    localStorage.removeItem(ROLE_KEY)
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('sb-')) localStorage.removeItem(key)
+    })
+    supabase.auth.signOut().catch(() => {}) // fire and forget
   }
 
   return (

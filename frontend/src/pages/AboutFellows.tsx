@@ -4,7 +4,7 @@ const FELLOW_APPLY_URL = 'https://forms.office.com/Pages/ResponsePage.aspx?id=2w
 
 const highlights = [
   { icon: '📅', label: '450 Hours', desc: 'Serve 450 hours over the academic year at your host site' },
-  { icon: '🎓', label: '$9,000 Award', desc: 'Earn a Segal AmeriCorps Education Award upon completion' },
+  { icon: '🎓', label: '$10,000 Award', desc: 'Earn a Segal AmeriCorps Education Award upon completion' },
   { icon: '🤝', label: '4 Cohorts', desc: 'Join a cohort focused on Food, Climate, Health, or K–12 Education' },
   { icon: '🌱', label: 'Leadership', desc: 'Build real-world skills through meaningful community service' },
 ]
@@ -12,7 +12,7 @@ const highlights = [
 const faqs = [
   { q: 'Who can apply to be a Fellow?', a: 'Cal Poly students of any major and year are eligible to apply. Fellows must be enrolled at least half-time during their service year.' },
   { q: 'How many hours per week does this require?', a: 'Fellows serve approximately 10–15 hours per week at their host site, completing 450 total hours over the academic year.' },
-  { q: 'What is the education award?', a: 'Upon successful completion, Fellows receive a $9,000 Segal AmeriCorps Education Award that can be used to pay tuition or student loans.' },
+  { q: 'What is the education award?', a: 'Upon successful completion, Fellows receive a $10,000 Segal AmeriCorps Education Award that can be used to pay tuition or student loans.' },
   { q: 'Can I choose my cohort?', a: 'Yes — when you apply you indicate your preferred cohort area. Placements are made based on interest, availability, and fit.' },
 ]
 
@@ -57,7 +57,7 @@ export default function AboutFellows() {
       <section className="bg-gray-50 py-16 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-cc-blue mb-6 text-center">What Does a Fellow Do?</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             <div className="space-y-4 text-gray-600 leading-relaxed">
               <p>
                 As a College Corps Fellow, you'll be placed with a nonprofit or government partner in San Luis Obispo County that aligns with your chosen cohort area. You'll show up, serve, and make a real difference — all while earning academic credit and a financial award.
@@ -69,9 +69,13 @@ export default function AboutFellows() {
                 Past fellows have worked at food banks, environmental nonprofits, local schools, and public health organizations — doing everything from direct service to community outreach.
               </p>
             </div>
-            {/* Photo placeholder */}
-            <div className="bg-cc-blue-light/20 rounded-2xl h-64 flex items-center justify-center">
-              <p className="text-cc-blue-medium text-sm font-medium">[ Photo — upload via Media tab in admin ]</p>
+            <div className="rounded-2xl overflow-hidden">
+              <img
+                src="/media/fellows-what-they-do.jpg"
+                alt="College Corps Fellows in action"
+                className="w-full h-full object-cover"
+                style={{ objectPosition: 'center 10%', transform: 'scale(1.4)', transformOrigin: 'center 15%' }}
+              />
             </div>
           </div>
         </div>
@@ -83,8 +87,8 @@ export default function AboutFellows() {
           <h2 className="text-3xl font-bold text-cc-blue mb-10 text-center">Hear from Fellows</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              { quote: '"Being a College Corps Fellow changed the way I think about community impact. I grew more in one year than in any classroom."', name: 'Fellow Name', cohort: 'Food Insecurity Cohort' },
-              { quote: '"The education award helped me pay off a semester of tuition. And the work I did at my site was genuinely meaningful."', name: 'Fellow Name', cohort: 'K–12 Education Cohort' },
+              { quote: '"College Corps has provided me experiences that will undoubtedly be useful in my future career. It has also given me a sense of fulfillment as I can be assured my service is going towards helping many people in my community."', name: 'Angel Guerrero', cohort: '3rd Year, Bioresource & Agricultural Engineering Major' },
+              { quote: '"College Corps has allowed me to gain hands on experiences in areas that I am passionate about. Through this program, I have been able to play a role in my community and see how my impact has played a positive role on others."', name: 'Mikela Priola', cohort: '2nd Year, Animal Science Major' },
             ].map((q, i) => (
               <div key={i} className="bg-white rounded-xl shadow-sm p-8 border-l-4 border-cc-orange">
                 <p className="text-gray-600 italic leading-relaxed mb-4">{q.quote}</p>
@@ -93,7 +97,6 @@ export default function AboutFellows() {
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-400 mt-4">[ Replace placeholder quotes with real fellow testimonials ]</p>
         </div>
       </section>
 

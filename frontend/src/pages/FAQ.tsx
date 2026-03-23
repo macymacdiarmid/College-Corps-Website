@@ -28,6 +28,29 @@ const generalFAQs: FAQItem[] = [
   },
 ]
 
+const financialAidFAQs: FAQItem[] = [
+  {
+    question: 'How are the monthly living stipends paid?',
+    answer: 'Monthly living stipends are dispersed through financial aid via direct deposit (if set up) or a check.',
+  },
+  {
+    question: 'When will I receive my education award?',
+    answer: 'After the completion of 450 hours and completion of your service term, your Education Award will be dispersed.',
+  },
+  {
+    question: 'Do I need to receive financial aid to qualify for this program?',
+    answer: 'The College Corps program works in conjunction with your financial aid package, but you do not have to qualify for financial aid to qualify for this program. Please read about the requirements for this program to see if you qualify. If accepted to the program, you will work closely with a financial aid advisor to understand how this program works in conjunction with your financial aid package.',
+  },
+  {
+    question: 'What if I\'m graduating?',
+    answer: 'If you are graduating at the end of the 2026 year, you will still be awarded your education award, you can use it toward future education such as a masters, payment of loans, pursuit of a professional license or certification or as a gift to a family member\'s education.',
+  },
+  {
+    question: 'Is the living stipend or Ed-Award taxable income?',
+    answer: 'Yes. Speak with a tax professional and financial aid office to learn more.',
+  },
+]
+
 const programFAQs: FAQItem[] = [
   {
     question: 'How many hours do I need to complete?',
@@ -116,6 +139,19 @@ export default function FAQ() {
           </div>
           <div className="space-y-3">
             {programFAQs.map((faq, i) => (
+              <AccordionItem key={i} {...faq} />
+            ))}
+          </div>
+        </section>
+
+        {/* Financial Aid FAQs */}
+        <section>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-1 w-8 bg-cc-orange rounded-full" />
+            <h2 className="text-2xl font-bold text-cc-blue">Financial Aid FAQs</h2>
+          </div>
+          <div className="space-y-3">
+            {financialAidFAQs.map((faq, i) => (
               <AccordionItem key={i} {...faq} />
             ))}
           </div>
