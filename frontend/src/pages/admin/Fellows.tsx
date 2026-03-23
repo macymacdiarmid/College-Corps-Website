@@ -99,7 +99,7 @@ export default function Fellows() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold text-cc-blue">Fellows</h1>
-          <p className="text-gray-500 text-sm mt-1">{fellows.length} active fellows</p>
+          <p className="text-gray-500 text-sm mt-1">Manage all active fellows</p>
         </div>
         <div className="flex items-center gap-3">
           <select
@@ -118,6 +118,20 @@ export default function Fellows() {
             </button>
           )}
         </div>
+      </div>
+
+      {/* Total count card */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="bg-white rounded-xl shadow-sm p-5 col-span-2 sm:col-span-1">
+          <p className="text-sm text-gray-500 mb-1">Total Fellows</p>
+          <p className="text-4xl font-bold text-cc-blue">{fellows.length}</p>
+        </div>
+        {Object.entries(cohortLabel).map(([key, label]) => (
+          <div key={key} className="bg-white rounded-xl shadow-sm p-5">
+            <p className="text-sm text-gray-500 mb-1">{label}</p>
+            <p className="text-4xl font-bold text-cc-blue">{fellows.filter(f => f.cohort === key).length}</p>
+          </div>
+        ))}
       </div>
 
       {showForm && (
