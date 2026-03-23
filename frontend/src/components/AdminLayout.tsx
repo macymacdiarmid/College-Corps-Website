@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 
 const navItems = [
   { label: 'Dashboard',      to: '/admin' },
+  { label: 'Access',         to: '/admin/access' },
   { label: 'Fellows',        to: '/admin/fellows' },
   { label: 'Applicants',     to: '/admin/applicants' },
   { label: 'Contacts',       to: '/admin/contacts' },

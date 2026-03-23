@@ -28,6 +28,7 @@ import Fellows from './pages/admin/Fellows'
 import Announcements from './pages/admin/Announcements'
 import FellowPhotos from './pages/admin/FellowPhotos'
 import CHPPostings from './pages/admin/CHPPostings'
+import AccessManager from './pages/admin/AccessManager'
 import CHPPortal from './pages/chp/Portal'
 
 import PortalLogin from './pages/portal/Login'
@@ -97,6 +98,7 @@ export default function App() {
                     <Route path="/postings"      element={<Postings />} />
                     <Route path="/fellow-photos"  element={<FellowPhotos />} />
                     <Route path="/chp-postings"   element={<CHPPostings />} />
+                    <Route path="/access"          element={<AccessManager />} />
                     <Route path="/content"       element={<Content />} />
                     <Route path="/media"         element={<Media />} />
                   </Routes>
