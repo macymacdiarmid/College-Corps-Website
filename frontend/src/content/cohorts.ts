@@ -24,7 +24,7 @@ export const cohorts: CohortContent[] = [
   {
     id: 'food',
     path: '/cohorts/food',
-    icon: '🌾',
+    icon: '🍎',
     title: 'Food Insecurity',
     tagline: 'Fighting hunger in San Luis Obispo County one meal at a time.',
     description:
