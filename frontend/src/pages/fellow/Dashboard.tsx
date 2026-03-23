@@ -136,6 +136,14 @@ export default function FellowDashboard() {
     setMyPhotos(data ?? [])
   }
 
+  async function handleDeletePhoto(id: string, imageUrl: string) {
+    if (!confirm('Delete this photo?')) return
+    await supabase.from('fellow_photos').delete().eq('id', id)
+    const path = imageUrl.split('/media/')[1]
+    if (path) await supabase.storage.from('media').remove([path])
+    setMyPhotos(prev => prev.filter(p => p.id !== id))
+  }
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-cc-blue-dark flex items-center justify-center">
@@ -435,13 +443,23 @@ export default function FellowDashboard() {
               <p className="text-sm font-semibold text-gray-700 mb-3">Your Submitted Photos ({myPhotos.length})</p>
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
                 {myPhotos.map(p => (
-                  <button
-                    key={p.id}
-                    onClick={() => setLightbox(p.image_url)}
-                    className="aspect-square rounded-lg overflow-hidden bg-gray-100 hover:opacity-90 transition-opacity"
-                  >
-                    <img src={p.image_url} alt="" className="w-full h-full object-cover" />
-                  </button>
+                  <div key={p.id} className="relative group aspect-square rounded-lg overflow-hidden bg-gray-100">
+                    <img
+                      src={p.image_url}
+                      alt=""
+                      onClick={() => setLightbox(p.image_url)}
+                      className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    />
+                    <button
+                      onClick={() => handleDeletePhoto(p.id, p.image_url)}
+                      className="absolute top-1 right-1 w-7 h-7 bg-black/60 hover:bg-red-500 text-white rounded-full items-center justify-center transition-colors opacity-0 group-hover:opacity-100 hidden group-hover:flex"
+                      title="Delete photo"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
