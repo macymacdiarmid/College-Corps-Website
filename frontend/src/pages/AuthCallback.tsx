@@ -12,7 +12,7 @@ export default function AuthCallback() {
     if (isAdmin)       navigate('/admin',  { replace: true })
     else if (isFellow) navigate('/fellow', { replace: true })
     else if (isCHP)    navigate('/chp',    { replace: true })
-    else               navigate('/portal', { replace: true })
+    else               navigate('/unauthorized', { replace: true })
   }, [user, isAdmin, isFellow, isCHP, loading, navigate])
 
   return (

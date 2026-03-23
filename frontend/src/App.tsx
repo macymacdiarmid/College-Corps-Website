@@ -35,6 +35,7 @@ import PortalLogin from './pages/portal/Login'
 import MyApplication from './pages/portal/MyApplication'
 import FellowDashboard from './pages/fellow/Dashboard'
 import AuthCallback from './pages/AuthCallback'
+import Unauthorized from './pages/Unauthorized'
 
 export default function App() {
   return (
@@ -69,6 +70,7 @@ export default function App() {
 
           {/* Auth callback — smart redirect based on role */}
           <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* Applicant portal */}
           <Route path="/portal/login" element={<PortalLogin />} />
