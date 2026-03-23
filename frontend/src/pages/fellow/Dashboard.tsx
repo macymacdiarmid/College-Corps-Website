@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient'
 import { useAuth } from '../../context/AuthContext'
@@ -77,6 +77,10 @@ export default function FellowDashboard() {
   const [postings, setPostings] = useState<Posting[]>([])
   const [loading, setLoading] = useState(true)
   const [lightbox, setLightbox] = useState<string | null>(null)
+  const [photoFiles, setPhotoFiles] = useState<File[]>([])
+  const [uploadingPhotos, setUploadingPhotos] = useState(false)
+  const [photoUploadDone, setPhotoUploadDone] = useState(false)
+  const photoInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (authLoading) return
@@ -101,6 +105,30 @@ export default function FellowDashboard() {
   const handleSignOut = () => {
     signOut()
     window.location.href = '/'
+  }
+
+  async function handlePhotoUpload() {
+    if (!photoFiles.length || !user) return
+    setUploadingPhotos(true)
+    for (const file of photoFiles) {
+      const ext = file.name.split('.').pop()
+      const path = `fellow-photos/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { data: uploadData } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+      if (uploadData) {
+        const { data: { publicUrl } } = supabase.storage.from('media').getPublicUrl(path)
+        await supabase.from('fellow_photos').insert({
+          fellow_email: user.email,
+          fellow_name: profile?.name ?? '',
+          image_url: publicUrl,
+          file_name: file.name,
+        })
+      }
+    }
+    setPhotoFiles([])
+    if (photoInputRef.current) photoInputRef.current.value = ''
+    setUploadingPhotos(false)
+    setPhotoUploadDone(true)
+    setTimeout(() => setPhotoUploadDone(false), 4000)
   }
 
   if (authLoading || loading) {
@@ -356,6 +384,45 @@ export default function FellowDashboard() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* Photo Upload */}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="font-bold text-cc-blue">Share Your Site Photos</h2>
+          </div>
+          <div className="px-6 py-6 flex flex-col sm:flex-row gap-6 items-start">
+            <div className="flex-1">
+              <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                📸 Upload any images you may have from your sites to be featured on our social media or webpages!
+              </p>
+              <input
+                ref={photoInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={e => setPhotoFiles(Array.from(e.target.files ?? []))}
+                className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-cc-blue file:text-white hover:file:bg-cc-blue-navy cursor-pointer mb-3"
+              />
+              {photoFiles.length > 0 && (
+                <p className="text-xs text-gray-400 mb-3">{photoFiles.length} photo{photoFiles.length > 1 ? 's' : ''} selected</p>
+              )}
+              {photoUploadDone && (
+                <p className="text-sm text-green-600 font-medium mb-3">Photos uploaded successfully! Thank you 🎉</p>
+              )}
+              <button
+                onClick={handlePhotoUpload}
+                disabled={!photoFiles.length || uploadingPhotos}
+                className="px-5 py-2 bg-cc-orange text-white rounded-lg text-sm font-medium hover:bg-cc-orange-dark transition-colors disabled:opacity-50"
+              >
+                {uploadingPhotos ? 'Uploading…' : 'Submit Photos'}
+              </button>
+            </div>
+            <div className="w-full sm:w-48 bg-cc-blue-dark rounded-xl p-4 text-center flex-shrink-0">
+              <div className="text-3xl mb-2">📷</div>
+              <p className="text-white text-xs font-semibold leading-relaxed">Your photos help showcase the amazing work you do in the community!</p>
+            </div>
+          </div>
         </div>
 
         {/* Newsletters */}

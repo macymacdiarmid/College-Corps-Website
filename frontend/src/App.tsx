@@ -26,6 +26,7 @@ import Content from './pages/admin/Content'
 import Media from './pages/admin/Media'
 import Fellows from './pages/admin/Fellows'
 import Announcements from './pages/admin/Announcements'
+import FellowPhotos from './pages/admin/FellowPhotos'
 
 import PortalLogin from './pages/portal/Login'
 import MyApplication from './pages/portal/MyApplication'
@@ -89,6 +90,7 @@ export default function App() {
                     <Route path="/applicants"    element={<Applicants />} />
                     <Route path="/contacts"      element={<Contacts />} />
                     <Route path="/postings"      element={<Postings />} />
+                    <Route path="/fellow-photos"  element={<FellowPhotos />} />
                     <Route path="/content"       element={<Content />} />
                     <Route path="/media"         element={<Media />} />
                   </Routes>
