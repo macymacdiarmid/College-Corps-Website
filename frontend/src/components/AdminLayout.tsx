@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { supabase } from '../lib/supabaseClient'
 
 const navItems = [
   { label: 'Dashboard',      to: '/admin' },
@@ -18,6 +19,20 @@ const navItems = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, signOut } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [unreadChat, setUnreadChat] = useState(0)
+
+  useEffect(() => {
+    async function fetchUnread() {
+      const { count } = await supabase
+        .from('chat_messages')
+        .select('id', { count: 'exact', head: true })
+        .is('answer', null)
+      setUnreadChat(count ?? 0)
+    }
+    fetchUnread()
+    const interval = setInterval(fetchUnread, 10000)
+    return () => clearInterval(interval)
+  }, [])
 
   const handleSignOut = () => {
     signOut()
@@ -47,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             end={item.to === '/admin'}
             onClick={closeSidebar}
             className={({ isActive }) =>
-              `block px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              `flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive
                   ? 'bg-cc-blue text-white'
                   : 'text-cc-blue-light hover:bg-cc-blue-navy hover:text-white'
@@ -55,6 +70,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             }
           >
             {item.label}
+            {item.to === '/admin/chatbot' && unreadChat > 0 && (
+              <span className="ml-2 min-w-[1.25rem] h-5 px-1 bg-cc-orange text-white text-xs font-bold rounded-full flex items-center justify-center">
+                {unreadChat}
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>
