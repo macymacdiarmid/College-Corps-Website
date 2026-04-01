@@ -1,25 +1,52 @@
 import { useState, useRef, useEffect } from 'react'
+import { supabase } from '../lib/supabaseClient'
 
-interface ChatMessage {
-  sender: 'user' | 'admin'
-  text: string
-  time: string
+const SESSION_KEY = 'cc_chat_session'
+
+function getSessionId(): string {
+  let id = localStorage.getItem(SESSION_KEY)
+  if (!id) {
+    id = crypto.randomUUID()
+    localStorage.setItem(SESSION_KEY, id)
+  }
+  return id
 }
 
-const now = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+interface DBMessage {
+  id: string
+  question: string
+  answer: string | null
+  created_at: string
+}
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
-  const [chat, setChat] = useState<ChatMessage[]>([
-    { sender: 'admin', text: 'Hi there! Welcome to College Corps. How can we help you today?', time: now() },
-  ])
+  const [messages, setMessages] = useState<DBMessage[]>([])
   const [chatInput, setChatInput] = useState('')
+  const [sending, setSending] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const sessionId = getSessionId()
+
+  async function fetchMessages() {
+    const { data } = await supabase
+      .from('chat_messages')
+      .select('id, question, answer, created_at')
+      .eq('session_id', sessionId)
+      .order('created_at')
+    setMessages(data ?? [])
+  }
+
+  useEffect(() => {
+    fetchMessages()
+    intervalRef.current = setInterval(fetchMessages, 4000)
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
+  }, [])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [chat])
+  }, [messages])
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -38,17 +65,17 @@ export default function Contact() {
     }
   }
 
-  const sendChatMessage = () => {
+  async function sendChatMessage() {
     const text = chatInput.trim()
-    if (!text) return
-    setChat((prev) => [...prev, { sender: 'user', text, time: now() }])
+    if (!text || sending) return
+    setSending(true)
+    await supabase.from('chat_messages').insert({
+      session_id: sessionId,
+      question: text,
+    })
     setChatInput('')
-    setTimeout(() => {
-      setChat((prev) => [
-        ...prev,
-        { sender: 'admin', text: "Thanks for your message! A member of our team will get back to you within 1–2 business days.", time: now() },
-      ])
-    }, 800)
+    setSending(false)
+    fetchMessages()
   }
 
   const handleChatKey = (e: React.KeyboardEvent) => {
@@ -166,109 +193,117 @@ export default function Contact() {
       </section>
 
       <div className="max-w-6xl mx-auto px-4 py-14">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Contact Form */}
-        <div>
-          <h2 className="text-2xl font-semibold text-cc-blue mb-6">Send Us a Message</h2>
-          {formStatus === 'sent' ? (
-            <div className="bg-blue-50 border border-cc-blue-light rounded-lg p-6 text-cc-blue">
-              <p className="font-semibold text-lg">Message sent!</p>
-              <p className="mt-1">We'll get back to you within 1–2 business days.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleFormSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input
-                  type="text"
-                  required
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cc-blue"
-                  placeholder="Your full name"
-                />
+          {/* Contact Form */}
+          <div>
+            <h2 className="text-2xl font-semibold text-cc-blue mb-6">Send Us a Message</h2>
+            {formStatus === 'sent' ? (
+              <div className="bg-blue-50 border border-cc-blue-light rounded-lg p-6 text-cc-blue">
+                <p className="font-semibold text-lg">Message sent!</p>
+                <p className="mt-1">We'll get back to you within 1–2 business days.</p>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cc-blue"
-                  placeholder="you@calpoly.edu"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                <textarea
-                  required
-                  rows={5}
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cc-blue resize-none"
-                  placeholder="Tell us what's on your mind…"
-                />
-              </div>
-              {formStatus === 'error' && (
-                <p className="text-red-600 text-sm">Something went wrong. Please try again.</p>
-              )}
-              <button
-                type="submit"
-                disabled={formStatus === 'sending'}
-                className="w-full py-3 bg-cc-blue text-white font-semibold rounded-lg hover:bg-cc-blue-navy transition-colors disabled:opacity-60"
-              >
-                {formStatus === 'sending' ? 'Sending…' : 'Send Message'}
-              </button>
-            </form>
-          )}
-        </div>
+            ) : (
+              <form onSubmit={handleFormSubmit} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <input type="text" required value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cc-blue"
+                    placeholder="Your full name" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <input type="email" required value={form.email}
+                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cc-blue"
+                    placeholder="you@calpoly.edu" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                  <textarea required rows={5} value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-cc-blue resize-none"
+                    placeholder="Tell us what's on your mind…" />
+                </div>
+                {formStatus === 'error' && (
+                  <p className="text-red-600 text-sm">Something went wrong. Please try again.</p>
+                )}
+                <button type="submit" disabled={formStatus === 'sending'}
+                  className="w-full py-3 bg-cc-blue text-white font-semibold rounded-lg hover:bg-cc-blue-navy transition-colors disabled:opacity-60">
+                  {formStatus === 'sending' ? 'Sending…' : 'Send Message'}
+                </button>
+              </form>
+            )}
+          </div>
 
-        {/* Chat Box */}
-        <div>
-          <h2 className="text-2xl font-semibold text-cc-blue mb-6">Live Chat</h2>
-          <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col h-96">
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
-              {chat.map((msg, i) => (
-                <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-xs px-4 py-2 rounded-2xl text-sm ${
-                    msg.sender === 'user'
-                      ? 'bg-cc-blue text-white rounded-br-none'
-                      : 'bg-white border border-gray-200 text-gray-800 rounded-bl-none'
-                  }`}>
-                    <p>{msg.text}</p>
-                    <p className={`text-xs mt-1 ${msg.sender === 'user' ? 'text-cc-blue-light' : 'text-gray-400'}`}>
-                      {msg.time}
+          {/* Live Chat */}
+          <div>
+            <h2 className="text-2xl font-semibold text-cc-blue mb-6">Live Chat</h2>
+            <div className="border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col h-96">
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                {messages.length === 0 && (
+                  <div className="h-full flex items-center justify-center">
+                    <p className="text-xs text-gray-400 text-center leading-relaxed">
+                      👋 Have a question? Send us a message and we'll reply shortly!
                     </p>
                   </div>
-                </div>
-              ))}
-              <div ref={chatEndRef} />
+                )}
+                {messages.map(m => (
+                  <div key={m.id} className="space-y-2">
+                    {/* User question */}
+                    <div className="flex justify-end">
+                      <div className="max-w-xs px-4 py-2 rounded-2xl rounded-br-none text-sm bg-cc-blue text-white">
+                        <p>{m.question}</p>
+                        <p className="text-xs mt-1 text-cc-blue-light">
+                          {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </div>
+                    {/* Answer or waiting */}
+                    <div className="flex justify-start">
+                      {m.answer ? (
+                        <div className="max-w-xs px-4 py-2 rounded-2xl rounded-bl-none text-sm bg-white border border-gray-200 text-gray-800">
+                          <p>{m.answer}</p>
+                          <p className="text-xs mt-1 text-gray-400">College Corps</p>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1.5 px-4 py-3 bg-white border border-gray-200 rounded-2xl rounded-bl-none">
+                          <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                <div ref={chatEndRef} />
+              </div>
+              <div className="border-t border-gray-200 p-3 bg-white flex gap-2">
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={handleChatKey}
+                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cc-blue"
+                  placeholder="Type a message… (Enter to send)"
+                />
+                <button
+                  onClick={sendChatMessage}
+                  disabled={!chatInput.trim() || sending}
+                  className="px-4 py-2 bg-cc-blue text-white rounded-lg text-sm font-medium hover:bg-cc-blue-navy transition-colors disabled:opacity-50"
+                >
+                  Send
+                </button>
+              </div>
             </div>
-            <div className="border-t border-gray-200 p-3 bg-white flex gap-2">
-              <input
-                type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={handleChatKey}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cc-blue"
-                placeholder="Type a message… (Enter to send)"
-              />
-              <button
-                onClick={sendChatMessage}
-                className="px-4 py-2 bg-cc-blue text-white rounded-lg text-sm font-medium hover:bg-cc-blue-navy transition-colors"
-              >
-                Send
-              </button>
-            </div>
+            <p className="text-xs text-gray-400 mt-2">
+              Typical response time: 1–2 business days. For urgent matters, email us directly.
+            </p>
           </div>
-          <p className="text-xs text-gray-400 mt-2">
-            Typical response time: 1–2 business days. For urgent matters, email us directly.
-          </p>
+
         </div>
       </div>
-    </div>
     </div>
   )
 }
