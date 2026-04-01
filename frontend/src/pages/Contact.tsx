@@ -69,11 +69,16 @@ export default function Contact() {
     const text = chatInput.trim()
     if (!text || sending) return
     setSending(true)
-    await supabase.from('chat_messages').insert({
-      session_id: sessionId,
-      question: text,
-    })
     setChatInput('')
+    // Optimistically show message immediately
+    const optimistic: DBMessage = {
+      id: `optimistic-${Date.now()}`,
+      question: text,
+      answer: null,
+      created_at: new Date().toISOString(),
+    }
+    setMessages(prev => [...prev, optimistic])
+    await supabase.from('chat_messages').insert({ session_id: sessionId, question: text })
     setSending(false)
     fetchMessages()
   }
