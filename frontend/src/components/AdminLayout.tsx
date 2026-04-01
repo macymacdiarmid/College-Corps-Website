@@ -10,6 +10,7 @@ const navItems = [
   { label: 'Fellow Postings', to: '/admin/postings' },
   { label: 'CHP Postings',   to: '/admin/chp-postings' },
   { label: 'Fellow Photos',  to: '/admin/fellow-photos' },
+  { label: 'ChatBot',        to: '/admin/chatbot' },
   { label: 'Content',        to: '/admin/content' },
   { label: 'Media',          to: '/admin/media' },
 ]
