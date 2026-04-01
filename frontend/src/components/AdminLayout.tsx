@@ -7,7 +7,6 @@ const navItems = [
   { label: 'Access',         to: '/admin/access' },
   { label: 'Fellows',        to: '/admin/fellows' },
   { label: 'Applicants',     to: '/admin/applicants' },
-  { label: 'Contacts',       to: '/admin/contacts' },
   { label: 'Fellow Postings', to: '/admin/postings' },
   { label: 'CHP Postings',   to: '/admin/chp-postings' },
   { label: 'Fellow Photos',  to: '/admin/fellow-photos' },

@@ -8,7 +8,6 @@ interface Stats {
   byClimate: number
   byHealth: number
   byK12: number
-  totalContacts: number
   totalNewsletters: number
 }
 
@@ -17,13 +16,6 @@ interface RecentApplication {
   name: string
   email: string
   cohort: string
-  created_at: string
-}
-
-interface RecentContact {
-  id: string
-  name: string
-  email: string
   created_at: string
 }
 
@@ -40,31 +32,26 @@ const fmt = (iso: string) =>
 export default function Dashboard() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [recentApps, setRecentApps] = useState<RecentApplication[]>([])
-  const [recentContacts, setRecentContacts] = useState<RecentContact[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
       const timeout = setTimeout(() => setLoading(false), 10000)
       try {
-        const [appsRes, contactsRes, newslettersRes] = await Promise.all([
+        const [appsRes, newslettersRes] = await Promise.all([
           supabase.from('applications').select('cohort, created_at, id, name, email').order('created_at', { ascending: false }),
-          supabase.from('contact_submissions').select('id, name, email, created_at').order('created_at', { ascending: false }),
           supabase.from('newsletters').select('id', { count: 'exact', head: true }),
         ])
         const apps = appsRes.data ?? []
-        const contacts = contactsRes.data ?? []
         setStats({
           totalApplicants: apps.length,
           byFood:    apps.filter(a => a.cohort === 'food').length,
           byClimate: apps.filter(a => a.cohort === 'climate').length,
           byHealth:  apps.filter(a => a.cohort === 'health').length,
           byK12:     apps.filter(a => a.cohort === 'k12').length,
-          totalContacts: contacts.length,
           totalNewsletters: newslettersRes.count ?? 0,
         })
         setRecentApps(apps.slice(0, 5))
-        setRecentContacts(contacts.slice(0, 5))
       } catch { /* leave state empty */ }
       clearTimeout(timeout)
       setLoading(false)
@@ -82,16 +69,15 @@ export default function Dashboard() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-5">
         {[
-          { label: 'Total Applicants', value: stats!.totalApplicants, color: 'bg-cc-blue' },
-          { label: 'Contact Submissions', value: stats!.totalContacts, color: 'bg-cc-orange' },
-          { label: 'Newsletters', value: stats!.totalNewsletters, color: 'bg-cc-blue-medium' },
-          { label: 'Cohorts', value: 4, color: 'bg-cc-blue-navy' },
+          { label: 'Total Applicants', value: stats!.totalApplicants },
+          { label: 'Newsletters', value: stats!.totalNewsletters },
+          { label: 'Cohorts', value: 4 },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-xl shadow-sm p-6">
             <p className="text-sm text-gray-500 mb-1">{s.label}</p>
-            <p className={`text-4xl font-bold text-cc-blue`}>{s.value}</p>
+            <p className="text-4xl font-bold text-cc-blue">{s.value}</p>
           </div>
         ))}
       </div>
@@ -122,43 +108,23 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Recent activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Applications */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="font-bold text-cc-blue">Recent Applications</h2>
-            <Link to="/admin/applicants" className="text-xs text-cc-orange hover:underline">View all</Link>
-          </div>
-          <div className="space-y-3">
-            {recentApps.length === 0 && <p className="text-gray-400 text-sm">No applications yet.</p>}
-            {recentApps.map((a) => (
-              <div key={a.id} className="flex items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-medium text-sm text-gray-800 truncate">{a.name}</p>
-                  <p className="text-xs text-gray-400">{cohortLabel[a.cohort]} · {fmt(a.created_at)}</p>
-                </div>
-                <span className="text-xs bg-cc-blue-dark text-white px-2 py-0.5 rounded-full flex-shrink-0">{a.cohort}</span>
-              </div>
-            ))}
-          </div>
+      {/* Recent Applications */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-bold text-cc-blue">Recent Applications</h2>
+          <Link to="/admin/applicants" className="text-xs text-cc-orange hover:underline">View all</Link>
         </div>
-
-        {/* Recent Contacts */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="font-bold text-cc-blue">Recent Contact Submissions</h2>
-            <Link to="/admin/contacts" className="text-xs text-cc-orange hover:underline">View all</Link>
-          </div>
-          <div className="space-y-3">
-            {recentContacts.length === 0 && <p className="text-gray-400 text-sm">No submissions yet.</p>}
-            {recentContacts.map((c) => (
-              <div key={c.id} className="min-w-0">
-                <p className="font-medium text-sm text-gray-800 truncate">{c.name}</p>
-                <p className="text-xs text-gray-400">{c.email} · {fmt(c.created_at)}</p>
+        <div className="space-y-3">
+          {recentApps.length === 0 && <p className="text-gray-400 text-sm">No applications yet.</p>}
+          {recentApps.map((a) => (
+            <div key={a.id} className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-medium text-sm text-gray-800 truncate">{a.name}</p>
+                <p className="text-xs text-gray-400">{cohortLabel[a.cohort]} · {fmt(a.created_at)}</p>
               </div>
-            ))}
-          </div>
+              <span className="text-xs bg-cc-blue-dark text-white px-2 py-0.5 rounded-full flex-shrink-0">{a.cohort}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
