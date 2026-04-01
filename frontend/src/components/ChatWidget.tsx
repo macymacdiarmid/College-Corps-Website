@@ -34,7 +34,7 @@ export default function ChatWidget() {
       .select('id, question, answer, created_at')
       .eq('session_id', sessionId)
       .order('created_at')
-    setMessages(data ?? [])
+    if (data !== null) setMessages(data)
   }
 
   useEffect(() => {
