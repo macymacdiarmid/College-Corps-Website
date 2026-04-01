@@ -67,21 +67,15 @@ export default function AboutCHPs() {
 
       {/* Quotes */}
       <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-bold text-cc-blue mb-10 text-center">Hear from Our Partners</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              { quote: '"Our College Corps Fellow brought energy, dedication, and fresh ideas to our team. The partnership exceeded our expectations."', name: 'Partner Name', org: 'Organization Name' },
-              { quote: '"Hosting a Fellow allowed us to expand our outreach programs in ways we couldn\'t have done alone."', name: 'Partner Name', org: 'Organization Name' },
-            ].map((q, i) => (
-              <div key={i} className="bg-white rounded-xl shadow-sm p-8 border-l-4 border-cc-blue">
-                <p className="text-gray-600 italic leading-relaxed mb-4">{q.quote}</p>
-                <p className="font-semibold text-cc-blue text-sm">{q.name}</p>
-                <p className="text-gray-400 text-xs">{q.org}</p>
-              </div>
-            ))}
+          <div className="bg-white rounded-xl shadow-sm p-8 border-l-4 border-cc-orange">
+            <span className="text-5xl text-cc-orange leading-none">"</span>
+            <p className="text-gray-600 italic leading-relaxed text-lg mb-6 -mt-2">
+              City Farm SLO is proud to be partnered with the Cal Poly College Corps program as a community host partner! Whether they're leading harvests, assisting with our Therapeutic Horticulture programs, or providing support to our tenant farmers, our fellows are building technical skills that will positively impact, not only their futures, but the future of our community. Our Fellows have provided critical support to help us carry out our mission of empowering the next generation through sustainable agriculture farm-based education.
+            </p>
+            <p className="font-semibold text-cc-blue">City Farm SLO</p>
           </div>
-          <p className="text-center text-xs text-gray-400 mt-4">[ Replace placeholder quotes with real partner testimonials ]</p>
         </div>
       </section>
 
