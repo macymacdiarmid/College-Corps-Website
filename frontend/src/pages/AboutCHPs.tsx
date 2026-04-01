@@ -57,10 +57,11 @@ export default function AboutCHPs() {
                 Past CHPs include local food banks, environmental advocacy organizations, school districts, and public health departments across San Luis Obispo County.
               </p>
             </div>
-            {/* Photo placeholder */}
-            <div className="bg-cc-blue-light/20 rounded-2xl h-64 flex items-center justify-center">
-              <p className="text-cc-blue-medium text-sm font-medium">[ Photo — upload via Media tab in admin ]</p>
-            </div>
+            <img
+              src="/media/chp-photo.jpg"
+              alt="College Corps fellows at a community event"
+              className="rounded-2xl w-full h-64 object-cover shadow-md"
+            />
           </div>
         </div>
       </section>
